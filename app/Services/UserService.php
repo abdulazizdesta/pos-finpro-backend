@@ -19,7 +19,7 @@ class UserService
             ->when($role, fn($q) => $q->where('role', $role))
             ->when($search, fn($q) => $q->where('name', 'like', "%{$search}%"));
 
-        if ($authUser->role !== 'superadmin') {
+        if ($authUser->role->value !== 'superadmin') {
             $query->where('business_id', $authUser->business_id);
         }
 
@@ -28,7 +28,7 @@ class UserService
 
     public function create(StoreUserRequest $request, User $authUser)
     {
-        $userRole = $authUser->role;
+        $userRole = $authUser->role->value;
         $businessId = $userRole === 'superadmin'
             ? $request->business_id
             : $authUser->business_id;
@@ -52,7 +52,7 @@ class UserService
     public function update(UpdateUserRequest $request, User $user): User
     {
         $businessId = $user->business_id;
-        if ($request->outlet_id) {
+        if ($request->outlet_id && $businessId) {
             Outlet::where('id', $request->outlet_id)
                 ->where('business_id', $businessId)
                 ->firstOrFail();
@@ -70,7 +70,7 @@ class UserService
         }
 
         $user->update($data);
-        return $user;
+        return $user->fresh();
     }
 
     public function delete(User $user)
@@ -80,7 +80,7 @@ class UserService
 
     public function authorizeAccess(User $authUser, User $targeUser)
     {
-        $userRole = $authUser->role;
+        $userRole = $authUser->role->value;
         if ($userRole === 'superadmin') {
             return;
         }

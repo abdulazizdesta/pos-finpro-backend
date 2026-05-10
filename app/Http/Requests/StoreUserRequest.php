@@ -29,8 +29,16 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'in:' . implode(',', array_column(UserRole::cases(), 'value'))],
             'is_active' => ['nullable', 'boolean'],
-            'business_id' => ['nullable', 'integer', 'exists:businesses,id'],
-            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id']
+            'business_id' => [
+                auth()->user()->role->value === 'superadmin' ? 'required' : 'nullable',
+                'integer',
+                'exists:businesses,id'
+            ],
+            'outlet_id' => [
+                $this->input('role') === 'cashier' ? 'required' : 'nullable',
+                'integer',
+                'exists:outlets,id'
+            ],
         ];
     }
 
@@ -47,8 +55,10 @@ class StoreUserRequest extends FormRequest
             'password.min' => 'Password must be at least 8 characters',
             'role.required' => 'Role is required',
             'role.in' => 'Role must be one of: ' . implode(', ', array_column(UserRole::cases(), 'value')),
+            'business_id.required' => 'Business is required for superadmin',
             'business_id.integer' => 'Business ID must be a number',
             'business_id.exists' => 'Business not found',
+            'outlet_id.required'   => 'Outlet is required for cashier',
             'outlet_id.integer' => 'Outlet ID must be a number',
             'outlet_id.exists' => 'Outlet not found',
         ];

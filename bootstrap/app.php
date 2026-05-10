@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Middleware\CheckRole;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => \App\Http\Middleware\CheckRole::class,
+            'role' => CheckRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -28,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     ->toArray(),
             ], 422);
         });
-        $exceptions->render(function (ModelNotFoundException $e) {
+        $exceptions->render(function (NotFoundHttpException $e, $request) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data not found',

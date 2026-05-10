@@ -29,8 +29,14 @@ class UpdateUserRequest extends FormRequest
             'password' => ['sometimes', 'string', 'min:8'],
             'role' => ['sometimes', 'in:' . implode(',', array_column(UserRole::cases(), 'value'))],
             'is_active' => ['nullable', 'boolean'],
-            'business_id' => ['nullable', 'integer', 'exists:businesses,id'],
-            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id']
+            'outlet_id' => [
+                'sometimes',
+                (($this->input('role') ?? $this->route('user')->role->value) === 'cashier')
+                ? 'required'
+                : 'nullable',
+                'integer',
+                'exists:outlets,id'
+            ],
         ];
     }
 
@@ -45,6 +51,7 @@ class UpdateUserRequest extends FormRequest
             'role.in' => 'Role must be one of: ' . implode(', ', array_column(UserRole::cases(), 'value')),
             'business_id.integer' => 'Business ID must be a number',
             'business_id.exists' => 'Business not found',
+            'outlet_id.required' => 'Outlet is required for cashier',
             'outlet_id.integer' => 'Outlet ID must be a number',
             'outlet_id.exists' => 'Outlet not found',
         ];

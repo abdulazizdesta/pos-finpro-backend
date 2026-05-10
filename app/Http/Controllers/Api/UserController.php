@@ -26,8 +26,8 @@ class UserController extends Controller
         try {
             $user = auth()->user();
             $data = $this->service->getAll($user);
-            return ApiMessage::success('Success get all users', $data, 200);
-        } catch (\Throwable $th) {
+            return ApiMessage::paginated('Success get all users', $data);
+        } catch (Throwable $th) {
             Log::error('UserController@method: ' . $th->getMessage());
             return ApiMessage::error('Something went wrong', 500);
         }
@@ -56,7 +56,7 @@ class UserController extends Controller
     {
         try {
              $this->service->authorizeAccess(auth()->user(), $user);
-            return ApiMessage::success('Success create user', $user, 201);
+            return ApiMessage::success('Success get user', $user, 201);
         } catch (Throwable $th) {
             Log::error('UserController@method: ' . $th->getMessage());
             return ApiMessage::error('Something went wrong', 500);

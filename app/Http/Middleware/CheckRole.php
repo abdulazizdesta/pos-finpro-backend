@@ -9,7 +9,8 @@ class CheckRole
 {
     public function handle(Request $request, Closure $next, string ...$roles): mixed
     {
-        if (!in_array($request->user()?->role, $roles)) {
+        $role = $request->user()?->role?->value;
+        if (!in_array($role, $roles)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized',
