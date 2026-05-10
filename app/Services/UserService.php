@@ -75,7 +75,7 @@ class UserService
 
     public function delete(User $user)
     {
-        $$user->delete();
+        $user->delete();
     }
 
     public function authorizeAccess(User $authUser, User $targeUser)
