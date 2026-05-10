@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,9 @@ Route::prefix('auth')->group(function(){
 Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:superadmin,owner')
          ->apiResource('users', UserController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('role:superadmin,owner,admin')
+         ->apiResource('categories', CategoryController::class);
 });
