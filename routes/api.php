@@ -33,4 +33,10 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
              ->withTrashed();
     });
 
+    // Product bulk actions
+    Route::delete('products/bulk', [ProductController::class, 'bulkDelete']);
+    Route::post('products/bulk-import', [ProductController::class, 'bulkImport']);
+    Route::delete('products/{product}/force', [ProductController::class, 'forceDelete'])
+         ->withTrashed();
+
 });

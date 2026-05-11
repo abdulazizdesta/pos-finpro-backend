@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\ApiLogger;
 use App\Helpers\ApiMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BulkDeleteProductRequest;
+use App\Http\Requests\BulkImportProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
@@ -71,6 +73,28 @@ class ProductController extends Controller
             return ApiMessage::success('Success delete product', null, 200);
         } catch (Throwable $th) {
             ApiLogger::error('ProductController@index', $th);
+            return ApiMessage::error('Something went wrong', [], 500);
+        }
+    }
+
+    public function bulkDelete(BulkDeleteProductRequest $request)
+    {
+        try {
+            $deleted = $this->service->bulkDelete($request->ids, auth()->user());
+            return ApiMessage::success("Success delete {$deleted} products", null, 200);
+        } catch (Throwable $th) {
+            ApiLogger::error('ProductController@bulkDelete', $th);
+            return ApiMessage::error('Something went wrong', [], 500);
+        }
+    }
+
+    public function bulkImport(BulkImportProductRequest $request)
+    {
+        try {
+            $result = $this->service->bulkImport($request, auth()->user());
+            return ApiMessage::success('Bulk import completed', $result, 200);
+        } catch (Throwable $th) {
+            ApiLogger::error('ProductController@bulkImport', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
