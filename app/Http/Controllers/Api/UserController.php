@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiLogger;
 use App\Helpers\ApiMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
@@ -28,7 +29,7 @@ class UserController extends Controller
             $data = $this->service->getAll($user);
             return ApiMessage::paginated('Success get all users', $data);
         } catch (Throwable $th) {
-            Log::error('UserController@method: ' . $th->getMessage());
+            ApiLogger::error('UserController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
 
@@ -44,7 +45,7 @@ class UserController extends Controller
             $data = $this->service->create($request, $user);
             return ApiMessage::success('Success create user', $data, 201);
         } catch (Throwable $th) {
-            Log::error('UserController@method: ' . $th->getMessage());
+            ApiLogger::error('UserController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }
@@ -58,7 +59,7 @@ class UserController extends Controller
              $this->service->authorizeAccess(auth()->user(), $user);
             return ApiMessage::success('Success get user', $user, 201);
         } catch (Throwable $th) {
-            Log::error('UserController@method: ' . $th->getMessage());
+            ApiLogger::error('UserController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }
@@ -73,7 +74,7 @@ class UserController extends Controller
             $data = $this->service->update($request, $user);
             return ApiMessage::success('Success update user', $data, 201);
         } catch (Throwable $th) {
-            Log::error('UserController@method: ' . $th->getMessage());
+            ApiLogger::error('UserController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }
@@ -88,7 +89,7 @@ class UserController extends Controller
             $this->service->delete($user);
             return ApiMessage::success('Success deleted user', null, 201);
         } catch (Throwable $th) {
-            Log::error('UserController@method: ' . $th->getMessage());
+            ApiLogger::error('UserController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }

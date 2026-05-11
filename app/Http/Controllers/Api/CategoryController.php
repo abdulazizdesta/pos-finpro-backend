@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiLogger;
 use App\Helpers\ApiMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
@@ -13,7 +14,9 @@ use Throwable;
 
 class CategoryController extends Controller
 {
-    public function __construct(private CategoryService $service) {}
+    public function __construct(private CategoryService $service)
+    {
+    }
 
     public function index()
     {
@@ -21,7 +24,7 @@ class CategoryController extends Controller
             $data = $this->service->getAll(auth()->user());
             return ApiMessage::paginated('Success get all categories', $data);
         } catch (Throwable $th) {
-            Log::error('CategoryController@index: ' . $th->getMessage());
+            ApiLogger::error('CategoryController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }
@@ -32,7 +35,7 @@ class CategoryController extends Controller
             $data = $this->service->create($request, auth()->user());
             return ApiMessage::success('Success create category', $data, 201);
         } catch (Throwable $th) {
-            Log::error('CategoryController@store: ' . $th->getMessage());
+            ApiLogger::error('CategoryController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }
@@ -43,7 +46,7 @@ class CategoryController extends Controller
             $this->service->authorizeAccess(auth()->user(), $category);
             return ApiMessage::success('Success get category', $category, 200);
         } catch (Throwable $th) {
-            Log::error('CategoryController@show: ' . $th->getMessage());
+            ApiLogger::error('CategoryController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }
@@ -55,7 +58,7 @@ class CategoryController extends Controller
             $data = $this->service->update($request, $category);
             return ApiMessage::success('Success update category', $data, 200);
         } catch (Throwable $th) {
-            Log::error('CategoryController@update: ' . $th->getMessage());
+            ApiLogger::error('CategoryController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }
@@ -67,7 +70,7 @@ class CategoryController extends Controller
             $this->service->delete($category);
             return ApiMessage::success('Success delete category', null, 200);
         } catch (Throwable $th) {
-            Log::error('CategoryController@destroy: ' . $th->getMessage());
+            ApiLogger::error('CategoryController@index', $th);
             return ApiMessage::error('Something went wrong', 500);
         }
     }

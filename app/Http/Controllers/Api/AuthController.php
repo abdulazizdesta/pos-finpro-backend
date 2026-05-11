@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiLogger;
 use App\Helpers\ApiMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginPinRequest;
@@ -37,7 +38,7 @@ class AuthController extends Controller
             ]);
 
         } catch (Throwable $th) {
-            Log::error($th->getMessage());
+            ApiLogger::error('AuthController@index', $th);
             return ApiMessage::error('Something went worng', [], 500);
         }
 
@@ -67,7 +68,7 @@ class AuthController extends Controller
             ]);
 
         } catch (Throwable $th) {
-            Log::error($th->getMessage());
+            ApiLogger::error('AuthController@index', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }

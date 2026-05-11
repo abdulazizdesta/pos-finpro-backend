@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('auth')->group(function(){
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('login/pin', [AuthController::class, 'loginWithPin']);
+// ─── Auth ────────────────────────────────────────────────────────────────────
+Route::prefix('auth')->group(function () {
+    Route::post('login',     [AuthController::class, 'login'])->middleware('throttle:auth');
+    Route::post('login/pin', [AuthController::class, 'loginWithPin'])->middleware('throttle:auth');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
@@ -15,12 +17,20 @@ Route::prefix('auth')->group(function(){
     });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware('role:superadmin,owner')
-         ->apiResource('users', UserController::class);
-});
+// ─── Protected Routes ─────────────────────────────────────────────────────────
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware('role:superadmin,owner,admin')
-         ->apiResource('categories', CategoryController::class);
+    // Users — superadmin & owner only
+    Route::middleware('role:superadmin,owner')->group(function () {
+        Route::apiResource('users', UserController::class);
+    });
+
+    // Categories — superadmin, owner & admin
+    Route::middleware('role:superadmin,owner,admin')->group(function () {
+        Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('products',   ProductController::class);
+        Route::delete('products/{product}/force', [ProductController::class, 'forceDelete'])
+             ->withTrashed();
+    });
+
 });
