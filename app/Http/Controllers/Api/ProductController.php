@@ -69,7 +69,7 @@ class ProductController extends Controller
     {
         try {
             $this->service->authorizeAccess(auth()->user(), $product);
-            $this->service->delete($product);
+            $this->service->delete($product, auth()->user());
             return ApiMessage::success('Success delete product', null, 200);
         } catch (Throwable $th) {
             ApiLogger::error('ProductController@index', $th);

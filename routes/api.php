@@ -28,15 +28,14 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     // Categories — superadmin, owner & admin
     Route::middleware('role:superadmin,owner,admin')->group(function () {
         Route::apiResource('categories', CategoryController::class);
+        Route::delete('products/bulk', [ProductController::class, 'bulkDelete']);
         Route::apiResource('products',   ProductController::class);
         Route::delete('products/{product}/force', [ProductController::class, 'forceDelete'])
              ->withTrashed();
     });
 
-    // Product bulk actions
-    Route::delete('products/bulk', [ProductController::class, 'bulkDelete']);
-    Route::post('products/bulk-import', [ProductController::class, 'bulkImport']);
-    Route::delete('products/{product}/force', [ProductController::class, 'forceDelete'])
-         ->withTrashed();
-
+    Route::middleware('role:superadmin,owner,admin')->group(function () {
+        Route::post('products/bulk-import', [ProductController::class, 'bulkImport']);
+    });
+    
 });

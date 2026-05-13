@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Requests\BulkImportProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Jobs\BulkImportProductJob;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -74,13 +75,18 @@ class ProductService
         return $product->fresh(['category:id,name']);
     }
 
-    public function delete(Product $product): void
+    public function delete(Product $product, User $authUser): void
     {
+        $product->deleted_by = $authUser->id;
+        $product->save();
         $product->delete();
     }
 
     public function forceDelete(Product $product): void
     {
+        if ($authUser->role->value !== 'superadmin') {
+            abort(403, 'Only superadmin can permanently delete products');
+        }
         if ($product->image_url) {
             Storage::delete(str_replace('/storage/', 'public/', $product->image_url));
         }
@@ -95,6 +101,8 @@ class ProductService
             $query->where('business_id', $authUser->business_id);
         }
 
+        $query->update(['deleted_by' => $authUser->id]);
+
         return $query->delete();
     }
 
@@ -103,66 +111,14 @@ class ProductService
         $businessId = $authUser->role->value === 'superadmin'
             ? $request->business_id
             : $authUser->business_id;
-        $file = $request->file('file')->getRealPath();
-        $handle = fopen($file, 'r');
 
-        $header = fgetcsv($handle);
-        $header = array_map('trim', $header);
+        $path = $request->file('file')->store('imports');
+        $fullPath = Storage::path($path);
 
-        $success = 0;
-        $failed = [];
-        $row = 1;
-
-        while (($line = fgetcsv($handle)) !== false) {
-            $row++;
-
-            if (count($line) !== count($header)) {
-                $failed[] = [
-                    'row' => $row,
-                    'reason' => 'Column count mismatch'
-                ];
-                continue;
-            }
-
-            $data = array_combine($header, $line);
-
-            if (empty($data['name']) || empty($data['price'])) {
-                $failed[] = [
-                    'row' => $row,
-                    'reason' => 'Name and price are required'
-                ];
-                continue;
-            }
-
-            $sku = !empty($data['sku']) ? trim($data['sku']) : $this->generateSku($data['name']);
-            if (Product::where('sku', $sku)->exists()) {
-                $failed[] = ['row' => $row, 'reason' => "SKU '{$sku}' already exists"];
-                continue;
-            }
-
-            try {
-                Product::create([
-                    'business_id' => $businessId,
-                    'category_id' => !empty($data['category_id']) ? (int) $data['category_id'] : null,
-                    'name' => trim($data['name']),
-                    'sku' => $sku,
-                    'description' => $data['description'] ?? null,
-                    'price' => (float) $data['price'],
-                    'cost_price' => !empty($data['cost_price']) ? (float) $data['cost_price'] : null,
-                    'has_variants' => filter_var($data['has_variants'] ?? false, FILTER_VALIDATE_BOOLEAN),
-                    'is_active' => filter_var($data['is_active'] ?? true, FILTER_VALIDATE_BOOLEAN),
-                ]);
-                $success++;
-            } catch (\Throwable $e) {
-                $failed[] = ['row' => $row, 'reason' => $e->getMessage()];
-            }
-        }
-        fclose($handle);
+        BulkImportProductJob::dispatch($fullPath, $businessId);
 
         return [
-            'imported' => $success,
-            'failed' => count($failed),
-            'errors' => $failed,
+            'message' => 'Import on processing.',
         ];
     }
 
