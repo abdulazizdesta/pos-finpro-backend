@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Stock extends Model
 {
-    public $timestamp = false;
+    public $timestamps = false;
+
+    const UPDATED_AT = 'updated_at';
 
     protected $fillable = [
         'product_id', 
