@@ -21,15 +21,14 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionService
 {
-    // ─── Create ──────────────────────────────────────────────────────────────
+    // ─── Create
 
     public function create(StoreTransactionRequest $request, User $authUser): Transaction
     {
-        // 1. Validasi shift milik outlet yang sama dengan user
         $shift = Shift::findOrFail($request->shift_id);
 
         if ($shift->status !== 'open') {
-            abort(422, 'Shift sudah ditutup, tidak bisa membuat transaksi');
+            abort(422, 'Shift is closed, cannot make transactions');
         }
 
         $outlet = Outlet::findOrFail($shift->outlet_id);
@@ -37,8 +36,6 @@ class TransactionService
         if ((int) $outlet->business_id !== (int) $authUser->business_id) {
             abort(403, 'Unauthorized access to this outlet');
         }
-
-        // 2. Load & validasi semua produk sekaligus (hindari N+1)
         $productIds = collect($request->items)->pluck('product_id')->unique();
         $products   = Product::whereIn('id', $productIds)
             ->where('business_id', $authUser->business_id)
@@ -48,34 +45,23 @@ class TransactionService
 
         foreach ($request->items as $item) {
             if (!$products->has($item['product_id'])) {
-                abort(422, "Produk ID {$item['product_id']} tidak ditemukan atau tidak aktif");
+                abort(422, "Produk ID {$item['product_id']} not found or inactive");
             }
         }
 
-        // 3. Validasi & load stock sekaligus
         $stockMap = $this->validateAndLoadStocks($request->items, $shift->outlet_id);
-
-        // 4. Hitung subtotal dari items
         $subtotal = $this->calculateSubtotal($request->items, $products);
-
-        // 5. Validasi & hitung diskon (stackable)
         $discountResult = $this->validateAndCalculateDiscounts(
             $request->discount_codes ?? [],
             $subtotal,
             $authUser->business_id
         );
 
-        // 6. Hitung tax otomatis dari taxable amount (sesudah diskon)
         $taxableAmount = $subtotal - $discountResult['total_discount'];
         $taxResult     = $this->calculateTaxes($taxableAmount, $authUser->business_id);
-
-        // 7. Total akhir
         $total = $taxableAmount + $taxResult['total_tax'];
-
-        // 8. Payment status: qris → pending, lainnya → paid
         $paymentStatus = $request->payment_method === 'qris' ? 'pending' : 'paid';
 
-        // 9. Simpan semua dalam satu DB transaction
         return DB::transaction(function () use (
             $request, $authUser, $shift, $outlet,
             $products, $stockMap,
@@ -161,14 +147,12 @@ class TransactionService
         });
     }
 
-    // ─── Confirm Payment (untuk QRIS pending) ────────────────────────────────
-
     public function confirmPayment(ConfirmPaymentRequest $request, Transaction $transaction, User $authUser): Transaction
     {
         $this->authorizeTransaction($transaction, $authUser);
 
         if ($transaction->payment_status !== 'pending') {
-            abort(422, 'Transaksi ini bukan dalam status pending');
+            abort(422, 'This transaction is not in pending status');
         }
 
         return DB::transaction(function () use ($request, $transaction, $authUser) {
@@ -186,7 +170,7 @@ class TransactionService
                     ->first();
 
                 if (!$stock || $stock->quantity < $item->quantity) {
-                    abort(422, "Stok tidak mencukupi untuk produk: {$item->product_name}");
+                    abort(422, "Insufficient stock of the product: {$item->product_name}");
                 }
 
                 $quantityBefore = $stock->quantity;
@@ -209,7 +193,7 @@ class TransactionService
         });
     }
 
-    // ─── Get All ─────────────────────────────────────────────────────────────
+    // ─── Get All
 
     public function getAll(User $authUser): LengthAwarePaginator
     {
@@ -228,7 +212,7 @@ class TransactionService
             ->paginate($perPage);
     }
 
-    // ─── Get Detail ──────────────────────────────────────────────────────────
+    // ─── Get Detail
 
     public function getDetail(Transaction $transaction, User $authUser): Transaction
     {
@@ -244,7 +228,7 @@ class TransactionService
         ]);
     }
 
-    // ─── Helpers ─────────────────────────────────────────────────────────────
+    // ─── Helpers
 
     private function validateAndLoadStocks(array $items, int $outletId): array
     {
@@ -261,11 +245,11 @@ class TransactionService
                 ->first();
 
             if (!$stock) {
-                abort(422, "Stok untuk produk ID {$item['product_id']} tidak ditemukan di outlet ini");
+                abort(422, "Stock for product ID {$item['product_id']} was not found in this outlet");
             }
 
             if ($stock->quantity < $item['quantity']) {
-                abort(422, "Stok tidak mencukupi untuk produk ID {$item['product_id']}. Tersedia: {$stock->quantity}");
+                abort(422, "Insufficient stock for product ID {$item['product_id']}. Available: {$stock->quantity}");
             }
 
             $stockMap[$stockKey] = $stock;
@@ -297,23 +281,23 @@ class TransactionService
                 ->first();
 
             if (!$discount) {
-                abort(422, "Kode diskon '{$code}' tidak valid");
+                abort(422, "Discount code '{$code}' is invalid");
             }
 
             if ($discount->valid_from && $now->lt($discount->valid_from)) {
-                abort(422, "Kode diskon '{$code}' belum berlaku");
+                abort(422, "Discount code '{$code}' is not valid yet");
             }
 
             if ($discount->valid_until && $now->gt($discount->valid_until)) {
-                abort(422, "Kode diskon '{$code}' sudah kadaluarsa");
+                abort(422, "Discount code '{$code}' has expired");
             }
 
             if ($discount->max_uses !== null && $discount->used_count >= $discount->max_uses) {
-                abort(422, "Kode diskon '{$code}' sudah mencapai batas penggunaan");
+                abort(422, "Discount code '{$code}' has reached its usage limit");
             }
 
             if ($subtotal < $discount->min_purchase) {
-                abort(422, "Minimum pembelian untuk diskon '{$code}' adalah Rp " . number_format($discount->min_purchase, 0, ',', '.'));
+                abort(422, "The minimum purchase for the '{$code}' discount is Rp " . number_format($discount->min_purchase, 0, ',', '.'));
             }
 
             $amount = $discount->type === 'percentage'
