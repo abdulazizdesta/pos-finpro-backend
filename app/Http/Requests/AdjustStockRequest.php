@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdjustStockRequest extends FormRequest
@@ -12,18 +11,24 @@ class AdjustStockRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'quantity_change' => ['required', 'integer', 'not_in:0'],
+            'notes' => ['required', 'string', 'max:255'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'quantity_change.required' => 'Quantity change is required',
+            'quantity_change.integer' => 'Quantity change must be a number',
+            'quantity_change.not_in' => 'Quantity change must not be zero',
+            'notes.required' => 'Notes are required for stock adjustment',
+            'notes.max' => 'Notes must not exceed 255 characters',
         ];
     }
 }
