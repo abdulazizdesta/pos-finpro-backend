@@ -160,7 +160,7 @@ class StockService
 
         $outlet = Outlet::findOrFail($outletId);
 
-        if ((int) $authUser->business_id !== (int) $authUser->business_id) {
+        if ((int) $authUser->business_id !== (int) $outlet->business_id) {
             abort(403, 'Unauthorized access to this outlet');
         }
     }
