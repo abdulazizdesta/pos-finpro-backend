@@ -8,12 +8,14 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Jobs\BulkImportProductJob;
 use App\Models\Product;
 use App\Models\User;
+use App\Traits\GeneratesSku;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class ProductService
 {
+    use GeneratesSku;
     public function getAll(User $authUser): LengthAwarePaginator
     {
         $perPage = min((int) request('per_page', 15), 100);
@@ -40,7 +42,7 @@ class ProductService
             ? $request->business_id
             : $authUser->business_id;
 
-        $imageUrl = $this->uploadImage($request);
+        $imageUrl = $this->uploadNewImage($request);
 
         return Product::create([
             'business_id' => $businessId,
@@ -56,23 +58,38 @@ class ProductService
         ]);
     }
 
+
     public function update(UpdateProductRequest $request, Product $product): Product
     {
-        $imageUrl = $this->uploadImage($request, $product->image_url);
+        $oldImageUrl = $product->image_url;
+        $newImageUrl = $this->uploadNewImage($request);
 
-        $product->update([
-            'category_id' => $request->input('category_id', $product->category_id),
-            'name' => $request->input('name', $product->name),
-            'sku' => $request->input('sku', $product->sku),
-            'description' => $request->input('description', $product->description),
-            'price' => $request->input('price', $product->price),
-            'cost_price' => $request->input('cost_price', $product->cost_price),
-            'image_url' => $imageUrl,
-            'has_variants' => $request->has('has_variants') ? $request->boolean('has_variants') : $product->has_variants,
-            'is_active' => $request->has('is_active') ? $request->boolean('is_active') : $product->is_active,
-        ]);
+        try {
+            DB::transaction(function () use ($request, $product, $newImageUrl, $oldImageUrl) {
+                $product->update([
+                    'category_id' => $request->input('category_id', $product->category_id),
+                    'name' => $request->input('name', $product->name),
+                    'sku' => $request->input('sku', $product->sku),
+                    'description' => $request->input('description', $product->description),
+                    'price' => $request->input('price', $product->price),
+                    'cost_price' => $request->input('cost_price', $product->cost_price),
+                    'image_url' => $newImageUrl ?? $oldImageUrl,
+                    'has_variants' => $request->has('has_variants') ? $request->boolean('has_variants') : $product->has_variants,
+                    'is_active' => $request->has('is_active') ? $request->boolean('is_active') : $product->is_active,
+                ]);
+            });
 
-        return $product->fresh(['category:id,name']);
+            if ($newImageUrl && $oldImageUrl) {
+                $this->deleteImageFile($oldImageUrl);
+            }
+
+            return $product->fresh(['category:id,name']);
+        } catch (\Throwable $e) {
+            if ($newImageUrl) {
+                $this->deleteImageFile($newImageUrl);
+            }
+            throw $e;
+        }
     }
 
     public function delete(Product $product, User $authUser): void
@@ -82,28 +99,32 @@ class ProductService
         $product->delete();
     }
 
-    public function forceDelete(Product $product): void
+    public function forceDelete(Product $product, User $authUser): void
     {
         if ($authUser->role->value !== 'superadmin') {
             abort(403, 'Only superadmin can permanently delete products');
         }
+
         if ($product->image_url) {
-            Storage::delete(str_replace('/storage/', 'public/', $product->image_url));
+            $this->deleteImageFile($product->image_url);
         }
+
         $product->forceDelete();
     }
 
-    public function bulkDelete(array $ids, User $authUser)
+    public function bulkDelete(array $ids, User $authUser): int
     {
-        $query = Product::whereIn('id', $ids);
+        return DB::transaction(function () use ($ids, $authUser) {
+            $query = Product::whereIn('id', $ids);
 
-        if ($authUser->role->value !== 'superadmin') {
-            $query->where('business_id', $authUser->business_id);
-        }
+            if ($authUser->role->value !== 'superadmin') {
+                $query->where('business_id', $authUser->business_id);
+            }
 
-        $query->update(['deleted_by' => $authUser->id]);
+            $query->update(['deleted_by' => $authUser->id]);
 
-        return $query->delete();
+            return $query->delete();
+        });
     }
 
     public function bulkImport(BulkImportProductRequest $request, User $authUser): array
@@ -132,21 +153,17 @@ class ProductService
         }
     }
 
-    private function uploadImage($request, ?string $oldImageUrl = null): ?string
+    private function uploadNewImage($request): ?string
     {
-        if (!$request->hasFile('image'))
-            return $oldImageUrl;
-
-        if ($oldImageUrl) {
-            Storage::delete(str_replace('/storage/', 'public/', $oldImageUrl));
+        if (!$request->hasFile('image')) {
+            return null;
         }
 
         return Storage::url($request->file('image')->store('public/products'));
     }
 
-    private function generateSku(string $name): string
+    private function deleteImageFile(string $imageUrl): void
     {
-        $prefix = strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $name), 0, 4));
-        return $prefix . '-' . strtoupper(Str::random(6));
+        Storage::delete(str_replace('/storage/', 'public/', $imageUrl));
     }
 }

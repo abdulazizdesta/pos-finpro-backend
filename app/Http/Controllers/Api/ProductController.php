@@ -37,7 +37,7 @@ class ProductController extends Controller
             $data = $this->service->create($request, auth()->user());
             return ApiMessage::success('Success create product', $data, 201);
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@index', $th);
+            ApiLogger::error('ProductController@store', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -48,7 +48,7 @@ class ProductController extends Controller
             $this->service->authorizeAccess(auth()->user(), $product);
             return ApiMessage::success('Success get product', $product->load('category:id,name'), 200);
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@index', $th);
+            ApiLogger::error('ProductController@show', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -60,7 +60,7 @@ class ProductController extends Controller
             $data = $this->service->update($request, $product);
             return ApiMessage::success('Success update product', $data, 200);
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@index', $th);
+            ApiLogger::error('ProductController@update', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -72,7 +72,7 @@ class ProductController extends Controller
             $this->service->delete($product, auth()->user());
             return ApiMessage::success('Success delete product', null, 200);
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@index', $th);
+            ApiLogger::error('ProductController@destroy', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -102,10 +102,10 @@ class ProductController extends Controller
     public function forceDelete(Product $product)
     {
         try {
-            $this->service->forceDelete($product);
+            $this->service->forceDelete($product, auth()->user());
             return ApiMessage::success('Success permanently delete product', null, 200);
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@index', $th);
+            ApiLogger::error('ProductController@forceDelete', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }

@@ -57,7 +57,7 @@ class CategoryService
             return;
         }
 
-        if ($authUser->business_id !== $category->business_id) {
+        if ((int) $authUser->business_id !== (int) $category->business_id) {
             abort(403, 'Unauthorized');
         }
     }

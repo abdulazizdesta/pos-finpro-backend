@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-// ─── Auth ────────────────────────────────────────────────────────────────────
+// ─── Auth 
 Route::prefix('auth')->group(function () {
     Route::post('login',     [AuthController::class, 'login'])->middleware('throttle:auth');
     Route::post('login/pin', [AuthController::class, 'loginWithPin'])->middleware('throttle:auth');
@@ -17,7 +17,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-// ─── Protected Routes ─────────────────────────────────────────────────────────
+// ─── Protected Routes
 Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Users — superadmin & owner only
@@ -25,17 +25,14 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::apiResource('users', UserController::class);
     });
 
-    // Categories — superadmin, owner & admin
+    // Categories & Products — superadmin, owner & admin
     Route::middleware('role:superadmin,owner,admin')->group(function () {
         Route::apiResource('categories', CategoryController::class);
         Route::delete('products/bulk', [ProductController::class, 'bulkDelete']);
-        Route::apiResource('products',   ProductController::class);
+        Route::post('products/bulk-import', [ProductController::class, 'bulkImport']);
         Route::delete('products/{product}/force', [ProductController::class, 'forceDelete'])
              ->withTrashed();
+        Route::apiResource('products', ProductController::class);
     });
 
-    Route::middleware('role:superadmin,owner,admin')->group(function () {
-        Route::post('products/bulk-import', [ProductController::class, 'bulkImport']);
-    });
-    
 });

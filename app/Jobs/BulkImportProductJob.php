@@ -2,31 +2,34 @@
 
 namespace App\Jobs;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Traits\GeneratesSku;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
 class BulkImportProductJob implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, GeneratesSku;
 
     public int $tries = 3;
     public int $timeout = 120;
 
     public function __construct(
         public readonly string $filePath,
-        public readonly int    $businessId,
-    ) {}
+        public readonly int $businessId,
+    ) {
+    }
 
     public function handle(): void
     {
-        $handle  = fopen($this->filePath, 'r');
-        $header  = array_map('trim', fgetcsv($handle));
+        $handle = fopen($this->filePath, 'r');
+        $header = array_map('trim', fgetcsv($handle));
 
         $success = 0;
-        $failed  = [];
-        $row     = 1;
+        $failed = [];
+        $row = 1;
 
         while (($line = fgetcsv($handle)) !== false) {
             $row++;
@@ -49,17 +52,29 @@ class BulkImportProductJob implements ShouldQueue
                 continue;
             }
 
+            $categoryId = !empty($data['category_id']) ? (int) $data['category_id'] : null;
+            if ($categoryId !== null) {
+                $categoryValid = Category::where('id', $categoryId)
+                    ->where('business_id', $this->businessId)
+                    ->exists();
+
+                if (!$categoryValid) {
+                    $failed[] = ['row' => $row, 'reason' => "Category {$categoryId} not found in this business"];
+                    continue;
+                }
+            }
+
             try {
                 Product::create([
-                    'business_id'  => $this->businessId,
-                    'category_id'  => !empty($data['category_id']) ? (int) $data['category_id'] : null,
-                    'name'         => trim($data['name']),
-                    'sku'          => $sku,
-                    'description'  => $data['description'] ?? null,
-                    'price'        => (float) $data['price'],
-                    'cost_price'   => !empty($data['cost_price']) ? (float) $data['cost_price'] : null,
+                    'business_id' => $this->businessId,
+                    'category_id' => $categoryId,
+                    'name' => trim($data['name']),
+                    'sku' => $sku,
+                    'description' => $data['description'] ?? null,
+                    'price' => (float) $data['price'],
+                    'cost_price' => !empty($data['cost_price']) ? (float) $data['cost_price'] : null,
                     'has_variants' => filter_var($data['has_variants'] ?? false, FILTER_VALIDATE_BOOLEAN),
-                    'is_active'    => filter_var($data['is_active'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                    'is_active' => filter_var($data['is_active'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 ]);
                 $success++;
             } catch (\Throwable $e) {
@@ -69,17 +84,15 @@ class BulkImportProductJob implements ShouldQueue
 
         fclose($handle);
 
+        if (file_exists($this->filePath)) {
+            unlink($this->filePath);
+        }
+
         Log::channel('api')->info('BulkImportProductJob selesai', [
             'business_id' => $this->businessId,
-            'imported'    => $success,
-            'failed'      => count($failed),
-            'errors'      => $failed,
+            'imported' => $success,
+            'failed' => count($failed),
+            'errors' => $failed,
         ]);
-    }
-
-    private function generateSku(string $name): string
-    {
-        $prefix = strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $name), 0, 4));
-        return $prefix . '-' . strtoupper(\Illuminate\Support\Str::random(6));
     }
 }
