@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreProductRequest extends FormRequest
 {
@@ -17,7 +18,13 @@ class StoreProductRequest extends FormRequest
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'business_id' => ['nullable', 'integer', 'exists:businesses,id'],
             'name' => ['required', 'string', 'max:150'],
-            'sku' => ['nullable', 'string', 'max:50', 'unique:products,sku'],
+            'sku' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('products', 'sku')
+                    ->where('business_id', auth()->user()->business_id),
+            ],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'cost_price' => ['nullable', 'numeric', 'min:0'],

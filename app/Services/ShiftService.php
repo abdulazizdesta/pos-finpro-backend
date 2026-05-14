@@ -20,7 +20,7 @@ class ShiftService
             ->exists();
 
         if ($alreadyOpen) {
-            abort(422, 'Outlet ini sudah memiliki shift yang sedang berjalan');
+            abort(422, 'This outlet already has a shift running');
         }
 
         return Shift::create([
@@ -37,7 +37,7 @@ class ShiftService
         $this->authorizeOutlet($authUser, $shift->outlet_id);
 
         if ($shift->status === 'closed') {
-            abort(422, 'Shift ini sudah ditutup');
+            abort(422, 'Shift Closed');
         }
 
         $shift->update([
@@ -59,7 +59,7 @@ class ShiftService
             ->first();
 
         if (!$shift) {
-            abort(404, 'Tidak ada shift yang sedang berjalan di outlet ini');
+            abort(404, 'There are no shifts currently running at this outlet');
         }
 
         return $shift;

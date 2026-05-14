@@ -47,7 +47,7 @@ class BulkImportProductJob implements ShouldQueue
             }
 
             $sku = !empty($data['sku']) ? trim($data['sku']) : $this->generateSku($data['name']);
-            if (Product::where('sku', $sku)->exists()) {
+            if (Product::where('sku', $sku)->where('business_id', $this->businessId)->exists()) {
                 $failed[] = ['row' => $row, 'reason' => "SKU '{$sku}' already exists"];
                 continue;
             }
@@ -71,8 +71,8 @@ class BulkImportProductJob implements ShouldQueue
                     'name' => trim($data['name']),
                     'sku' => $sku,
                     'description' => $data['description'] ?? null,
-                    'price' => (float) $data['price'],
-                    'cost_price' => !empty($data['cost_price']) ? (float) $data['cost_price'] : null,
+                    'price' => (int) $data['price'],
+                    'cost_price' => !empty($data['cost_price']) ? (int) $data['cost_price'] : null,
                     'has_variants' => filter_var($data['has_variants'] ?? false, FILTER_VALIDATE_BOOLEAN),
                     'is_active' => filter_var($data['is_active'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 ]);
