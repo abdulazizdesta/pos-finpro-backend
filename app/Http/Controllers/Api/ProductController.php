@@ -11,7 +11,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Services\ProductService;
-use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class ProductController extends Controller
@@ -25,8 +25,10 @@ class ProductController extends Controller
         try {
             $data = $this->service->getAll(auth()->user());
             return ApiMessage::paginated('Success get all products', $data);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@index', $th);
+            ApiLogger::error('CategoryController@index', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -36,8 +38,10 @@ class ProductController extends Controller
         try {
             $data = $this->service->create($request, auth()->user());
             return ApiMessage::success('Success create product', $data, 201);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@store', $th);
+            ApiLogger::error('CategoryController@store', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -47,8 +51,10 @@ class ProductController extends Controller
         try {
             $this->service->authorizeAccess(auth()->user(), $product);
             return ApiMessage::success('Success get product', $product->load('category:id,name'), 200);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@show', $th);
+            ApiLogger::error('CategoryController@show', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -59,8 +65,10 @@ class ProductController extends Controller
             $this->service->authorizeAccess(auth()->user(), $product);
             $data = $this->service->update($request, $product);
             return ApiMessage::success('Success update product', $data, 200);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@update', $th);
+            ApiLogger::error('CategoryController@update', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -71,8 +79,10 @@ class ProductController extends Controller
             $this->service->authorizeAccess(auth()->user(), $product);
             $this->service->delete($product, auth()->user());
             return ApiMessage::success('Success delete product', null, 200);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@destroy', $th);
+            ApiLogger::error('CategoryController@destroy', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -82,8 +92,10 @@ class ProductController extends Controller
         try {
             $deleted = $this->service->bulkDelete($request->ids, auth()->user());
             return ApiMessage::success("Success delete {$deleted} products", null, 200);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@bulkDelete', $th);
+            ApiLogger::error('CategoryController@bulkDelete', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -93,8 +105,10 @@ class ProductController extends Controller
         try {
             $result = $this->service->bulkImport($request, auth()->user());
             return ApiMessage::success('Bulk import completed', $result, 200);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@bulkImport', $th);
+            ApiLogger::error('CategoryController@bulkImport', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }
@@ -104,8 +118,10 @@ class ProductController extends Controller
         try {
             $this->service->forceDelete($product, auth()->user());
             return ApiMessage::success('Success permanently delete product', null, 200);
+        } catch (HttpException $e) {
+            throw $e;
         } catch (Throwable $th) {
-            ApiLogger::error('ProductController@forceDelete', $th);
+            ApiLogger::error('CategoryController@forceDelete', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }

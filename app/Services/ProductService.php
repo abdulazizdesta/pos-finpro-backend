@@ -25,7 +25,14 @@ class ProductService
 
         $query = Product::query()
             ->with(['category:id,name'])
-            ->when($search, fn($q) => $q->whereFullText(['name', 'sku'], $search))
+            ->when($search, function ($q) use ($search) {
+                if (app()->environment('testing') || DB::getDriverName() === 'sqlite') {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%");
+                } else {
+                    $q->whereFullText(['name', 'sku'], $search);
+                }
+            })
             ->when($category, fn($q) => $q->where('category_id', $category))
             ->when(!is_null($active), fn($q) => $q->where('is_active', filter_var($active, FILTER_VALIDATE_BOOLEAN)));
 
@@ -148,7 +155,7 @@ class ProductService
         if ($authUser->role->value === 'superadmin')
             return;
 
-        if ($authUser->business_id !== $product->business_id) {
+        if ((int) $authUser->business_id !== (int) $product->business_id) {
             abort(403, 'Unauthorized');
         }
     }
