@@ -3,17 +3,18 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Auth 
 Route::prefix('auth')->group(function () {
-    Route::post('login',     [AuthController::class, 'login'])->middleware('throttle:auth');
+    Route::post('login', [AuthController::class, 'login'])->middleware('throttle:auth');
     Route::post('login/pin', [AuthController::class, 'loginWithPin'])->middleware('throttle:auth');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('me',      [AuthController::class, 'me']);
+        Route::get('me', [AuthController::class, 'me']);
     });
 });
 
@@ -27,12 +28,21 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Categories & Products — superadmin, owner & admin
     Route::middleware('role:superadmin,owner,admin')->group(function () {
+        // Category
         Route::apiResource('categories', CategoryController::class);
+        // Product
         Route::delete('products/bulk', [ProductController::class, 'bulkDelete']);
         Route::post('products/bulk-import', [ProductController::class, 'bulkImport']);
         Route::delete('products/{product}/force', [ProductController::class, 'forceDelete'])
-             ->withTrashed();
+            ->withTrashed();
         Route::apiResource('products', ProductController::class);
+        // Stock
+        Route::get('stocks', [StockController::class, 'index']);
+        Route::post('stocks', [StockController::class, 'store']);
+        Route::get('stocks/{stock}', [StockController::class, 'show']);
+        Route::put('stocks/{stock}/restock', [StockController::class, 'restock']);
+        Route::put('stocks/{stock}/adjust', [StockController::class, 'adjust']);
+        Route::get('stock-mutations', [StockController::class, 'mutations']);
     });
 
 });

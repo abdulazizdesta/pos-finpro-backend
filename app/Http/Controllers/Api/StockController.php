@@ -10,6 +10,7 @@ use App\Http\Requests\RestockRequest;
 use App\Http\Requests\StoreStockRequest;
 use App\Models\Stock;
 use App\Services\StockService;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class StockController extends Controller
@@ -32,7 +33,7 @@ class StockController extends Controller
         try {
             $data = $this->service->create($request, auth()->user());
             return ApiMessage::success('Success create stock', $data, 201);
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             throw $e;
         } catch (Throwable $th) {
             ApiLogger::error('StockController@store', $th);
@@ -45,7 +46,7 @@ class StockController extends Controller
         try {
             $data = $this->service->getDetail($stock, auth()->user());
             return ApiMessage::success('Success get stock', $data, 200);
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             throw $e;
         } catch (Throwable $th) {
             ApiLogger::error('StockController@show', $th);
@@ -58,7 +59,7 @@ class StockController extends Controller
         try {
             $data = $this->service->restock($request, $stock, auth()->user());
             return ApiMessage::success('Success restock', $data, 200);
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             throw $e;
         } catch (Throwable $th) {
             ApiLogger::error('StockController@restock', $th);
@@ -71,7 +72,7 @@ class StockController extends Controller
         try {
             $data = $this->service->adjust($request, $stock, auth()->user());
             return ApiMessage::success('Success adjust stock', $data, 200);
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             throw $e;
         } catch (Throwable $th) {
             ApiLogger::error('StockController@adjust', $th);
