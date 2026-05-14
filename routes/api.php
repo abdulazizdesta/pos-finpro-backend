@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ShiftController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,14 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::put('stocks/{stock}/restock', [StockController::class, 'restock']);
         Route::put('stocks/{stock}/adjust', [StockController::class, 'adjust']);
         Route::get('stock-mutations', [StockController::class, 'mutations']);
+    });
+
+    Route::middleware('role:superadmin,owner,admin,cashier')->group(function () {
+        Route::get('shifts', [ShiftController::class, 'index']);
+        Route::post('shifts', [ShiftController::class, 'open']);
+        Route::get('shifts/active', [ShiftController::class, 'active']);
+        Route::get('shifts/{shift}', [ShiftController::class, 'show']);
+        Route::put('shifts/{shift}/close', [ShiftController::class, 'close']);
     });
 
 });

@@ -20,7 +20,7 @@ return new class extends Migration
                   ->nullOnDelete()
                   ->cascadeOnUpdate();
             $table->string('discount_code', 50)->nullable();
-            $table->decimal('discount_amount', 15, 2);
+            $table->unsignedBigInteger('discount_amount');
 
             $table->index('transaction_id', 'idx_td_transaction');
         });

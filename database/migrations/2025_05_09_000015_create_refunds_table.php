@@ -14,7 +14,7 @@ return new class extends Migration
                   ->constrained('transactions')
                   ->restrictOnDelete()
                   ->cascadeOnUpdate();
-            $table->decimal('amount', 15, 2);
+            $table->unsignedBigInteger('amount');
             $table->text('reason')->nullable();
             $table->foreignId('processed_by')
                   ->constrained('users')

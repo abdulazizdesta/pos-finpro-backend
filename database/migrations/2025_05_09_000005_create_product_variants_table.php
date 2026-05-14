@@ -16,7 +16,7 @@ return new class extends Migration
                   ->cascadeOnUpdate();
             $table->string('name', 100)->comment('contoh: Size M, Hot, Merah');
             $table->string('sku', 50)->unique()->nullable();
-            $table->decimal('price_adjustment', 15, 2)->default(0);
+            $table->bigInteger('price_adjustment')->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->softDeletes();
         });
