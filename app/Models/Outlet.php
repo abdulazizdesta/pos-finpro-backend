@@ -28,13 +28,18 @@ class Outlet extends Model
         ];
     }
 
-    public function users():HasMany 
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
 
-    public function business():BelongsTo
+    public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
+    }
+
+    public function shifts(): HasMany
+    {
+        return $this->hasMany(Shift::class);
     }
 }
