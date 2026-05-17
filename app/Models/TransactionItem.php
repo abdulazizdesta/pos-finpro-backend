@@ -17,12 +17,14 @@ class TransactionItem extends Model
         'unit_price',
         'quantity',
         'subtotal',
+        'refunded_quantity',
     ];
 
     protected $casts = [
         'unit_price' => 'integer',
         'subtotal'   => 'integer',
         'quantity'   => 'integer',
+        'refunded_quantity' => 'integer'
     ];
 
     public function transaction(): BelongsTo
