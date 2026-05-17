@@ -18,7 +18,9 @@ class StoreRefundRequest extends FormRequest
     {
         return [
             'items' => ['required', 'array', 'min:1'],
-            
+            'items.*.transaction_item_id' => ['required', 'integer', 'exists:transaction_items,id'],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'reason' => ['nullable', 'string', 'max:500']
         ];
     }
 }
