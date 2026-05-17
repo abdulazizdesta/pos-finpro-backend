@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\RefundController;
 use App\Http\Controllers\Api\ShiftController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\TransactionController;
@@ -52,4 +53,9 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::put('transactions/{transaction}/confirm-payment', [TransactionController::class, 'confirmPayment']);
         Route::put('transactions/{transaction}/cancel', [TransactionController::class, 'cancel']);
     });
+
+    Route::middleware('role:owner,admin,cashier')->group(function () {
+        Route::post('transactions/{transaction}/refund', [RefundController::class, 'store']);
+    });
+
 });
