@@ -50,5 +50,6 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::post('transactions', [TransactionController::class, 'store']);
         Route::get('transactions/{transaction}', [TransactionController::class, 'show']);
         Route::put('transactions/{transaction}/confirm-payment', [TransactionController::class, 'confirmPayment']);
+        Route::put('transactions/{transaction}/cancel', [TransactionController::class, 'cancel']);
     });
 });

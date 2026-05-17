@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
+    public function __construct(private BusinessService $businessService) {}
     public function register(RegisterRequest $request): array
     {
         return DB::transaction(function () use ($request) {
             $business = Business::create([
                 'name'      => $request->business_name,
-                'code'      => strtoupper($request->business_code),
+                'code'      => $this->businessService->generateBusinessCode($request->business_name),
                 'is_active' => true,
             ]);
 

@@ -57,11 +57,23 @@ class TransactionController extends Controller
     {
         try {
             $data = $this->service->confirmPayment($request, $transaction, auth()->user());
-            return ApiMessage::success('Pembayaran berhasil dikonfirmasi', $data);
+            return ApiMessage::success('Payment confirmed successfully', $data);
         } catch (HttpException $e) {
             throw $e;
         } catch (Throwable $th) {
             ApiLogger::error('TransactionController@confirmPayment', $th);
+            return ApiMessage::error('Something went wrong', [], 500);
+        }
+    }
+
+    public function cancel(Transaction $transaction){
+        try {
+            $data = $this->service->cancel($transaction, auth()->user());
+            return ApiMessage::success('Payment successfully cancelled', $data);
+        } catch (HttpException $e) {
+            throw $e;
+        } catch (Throwable $th) {
+            ApiLogger::error('TransactionController@cancel', $th);
             return ApiMessage::error('Something went wrong', [], 500);
         }
     }

@@ -37,7 +37,7 @@ class TransactionService
             abort(403, 'Unauthorized access to this outlet');
         }
         $productIds = collect($request->items)->pluck('product_id')->unique();
-        $products   = Product::whereIn('id', $productIds)
+        $products = Product::whereIn('id', $productIds)
             ->where('business_id', $authUser->business_id)
             ->where('is_active', true)
             ->get()
@@ -58,88 +58,98 @@ class TransactionService
         );
 
         $taxableAmount = $subtotal - $discountResult['total_discount'];
-        $taxResult     = $this->calculateTaxes($taxableAmount, $authUser->business_id);
+        $taxResult = $this->calculateTaxes($taxableAmount, $authUser->business_id);
         $total = $taxableAmount + $taxResult['total_tax'];
         $paymentStatus = $request->payment_method === 'qris' ? 'pending' : 'paid';
 
         return DB::transaction(function () use (
-            $request, $authUser, $shift, $outlet,
-            $products, $stockMap,
-            $subtotal, $discountResult, $taxResult, $taxableAmount, $total,
+            $request, 
+            $authUser, 
+            $shift, 
+            $outlet, 
+            $products, 
+            $stockMap, 
+            $subtotal, 
+            $discountResult, 
+            $taxResult, 
+            $total, 
             $paymentStatus
-        ) {
+            ) {
             $transactionCode = $this->generateTransactionCode($outlet);
 
             $transaction = Transaction::create([
                 'transaction_code' => $transactionCode,
-                'user_id'          => $authUser->id,
-                'outlet_id'        => $outlet->id,
-                'shift_id'         => $shift->id,
-                'subtotal'         => $subtotal,
-                'discount_amount'  => $discountResult['total_discount'],
-                'tax_amount'       => $taxResult['total_tax'],
-                'total'            => $total,
-                'payment_method'   => $request->payment_method,
-                'payment_status'   => $paymentStatus,
-                'notes'            => $request->notes,
+                'user_id' => $authUser->id,
+                'outlet_id' => $outlet->id,
+                'shift_id' => $shift->id,
+                'subtotal' => $subtotal,
+                'discount_amount' => $discountResult['total_discount'],
+                'tax_amount' => $taxResult['total_tax'],
+                'total' => $total,
+                'payment_method' => $request->payment_method,
+                'payment_status' => $paymentStatus,
+                'notes' => $request->notes,
             ]);
 
             foreach ($request->items as $item) {
-                $product      = $products[$item['product_id']];
-                $variantId    = $item['variant_id'] ?? null;
-                $unitPrice    = $product->price;
+                $product = $products[$item['product_id']];
+                $variantId = $item['variant_id'] ?? null;
+                $unitPrice = $product->price;
                 $itemSubtotal = $unitPrice * $item['quantity'];
 
                 TransactionItem::create([
                     'transaction_id' => $transaction->id,
-                    'product_id'     => $product->id,
-                    'variant_id'     => $variantId,
-                    'product_name'   => $product->name,
-                    'unit_price'     => $unitPrice,
-                    'quantity'       => $item['quantity'],
-                    'subtotal'       => $itemSubtotal,
+                    'product_id' => $product->id,
+                    'variant_id' => $variantId,
+                    'product_name' => $product->name,
+                    'unit_price' => $unitPrice,
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $itemSubtotal,
                 ]);
 
+                $stockKey = $product->id . '-' . ($variantId ?? 0);
+                $stock = $stockMap[$stockKey];
+
                 if ($paymentStatus === 'paid') {
-                    $stockKey       = $product->id . '-' . ($variantId ?? 0);
-                    $stock          = $stockMap[$stockKey];
                     $quantityBefore = $stock->quantity;
                     $stock->decrement('quantity', $item['quantity']);
 
                     StockMutation::create([
-                        'stock_id'        => $stock->id,
-                        'type'            => 'sale',
+                        'stock_id' => $stock->id,
+                        'type' => 'sale',
                         'quantity_change' => -$item['quantity'],
                         'quantity_before' => $quantityBefore,
-                        'quantity_after'  => $quantityBefore - $item['quantity'],
-                        'reference_id'    => $transaction->id,
-                        'reference_type'  => 'transaction',
-                        'user_id'         => $authUser->id,
-                        'notes'           => "Penjualan #{$transactionCode}",
+                        'quantity_after' => $quantityBefore - $item['quantity'],
+                        'reference_id' => $transaction->id,
+                        'reference_type' => 'transaction',
+                        'user_id' => $authUser->id,
+                        'notes' => "Penjualan #{$transactionCode}",
                     ]);
+                } else if($paymentStatus === 'pending'){
+                    $stock->increment('reserved_quantity', $item['quantity']);
                 }
             }
 
-            foreach ($discountResult['discounts'] as $d) {
+            foreach ($discountResult['discounts'] as $discount) {
                 TransactionDiscount::create([
-                    'transaction_id'  => $transaction->id,
-                    'discount_id'     => $d['discount_id'],
-                    'discount_code'   => $d['code'],
-                    'discount_amount' => $d['amount'],
+                    'transaction_id' => $transaction->id,
+                    'discount_id' => $discount['discount_id'],
+                    'discount_code' => $discount['code'],
+                    'discount_amount' => $discount['amount'],
                 ]);
 
-                if ($d['discount_id']) {
-                    Discount::where('id', $d['discount_id'])->increment('used_count');
+                if ($discount['discount_id']) {
+                    Discount::where('id', $discount['discount_id'])->increment('used_count');
                 }
             }
 
             foreach ($taxResult['taxes'] as $t) {
                 TransactionTax::create([
-                    'transaction_id'  => $transaction->id,
+                    'transaction_id' => $transaction->id,
                     'tax_settings_id' => $t['tax_settings_id'],
-                    'tax_name'        => $t['name'],
-                    'tax_rate'        => $t['rate'],
-                    'tax_amount'      => $t['amount'],
+                    'tax_name' => $t['name'],
+                    'tax_rate' => $t['rate'],
+                    'tax_amount' => $t['amount'],
                 ]);
             }
 
@@ -147,6 +157,7 @@ class TransactionService
         });
     }
 
+    // Confirm
     public function confirmPayment(ConfirmPaymentRequest $request, Transaction $transaction, User $authUser): Transaction
     {
         $this->authorizeTransaction($transaction, $authUser);
@@ -163,7 +174,7 @@ class TransactionService
 
             foreach ($transaction->items as $item) {
                 $variantId = $item->variant_id;
-                $stock     = Stock::where('product_id', $item->product_id)
+                $stock = Stock::where('product_id', $item->product_id)
                     ->where('outlet_id', $transaction->outlet_id)
                     ->where('variant_id', $variantId ?? 0)
                     ->lockForUpdate()
@@ -175,17 +186,18 @@ class TransactionService
 
                 $quantityBefore = $stock->quantity;
                 $stock->decrement('quantity', $item->quantity);
+                $stock->decrement('reserved_quantity', $item->quantity);
 
                 StockMutation::create([
-                    'stock_id'        => $stock->id,
-                    'type'            => 'sale',
+                    'stock_id' => $stock->id,
+                    'type' => 'sale',
                     'quantity_change' => -$item->quantity,
                     'quantity_before' => $quantityBefore,
-                    'quantity_after'  => $quantityBefore - $item->quantity,
-                    'reference_id'    => $transaction->id,
-                    'reference_type'  => 'transaction',
-                    'user_id'         => $authUser->id,
-                    'notes'           => "Penjualan #{$transaction->transaction_code}",
+                    'quantity_after' => $quantityBefore - $item->quantity,
+                    'reference_id' => $transaction->id,
+                    'reference_type' => 'transaction',
+                    'user_id' => $authUser->id,
+                    'notes' => "Penjualan #{$transaction->transaction_code}",
                 ]);
             }
 
@@ -193,7 +205,38 @@ class TransactionService
         });
     }
 
-    // ─── Get All
+    public function cancel(Transaction $transaction, User $authUser){
+        $this->authorizeTransaction($transaction, $authUser);
+
+        if($transaction->payment_status !== 'pending'){
+            abort(422, 'This transaction is not in pending status');
+        }
+
+        return DB::transaction(function () use($transaction){
+            $transaction->update(['payment_status' => 'cancelled']);
+
+            foreach ($transaction->items as $item) {
+                $variantId = $item->variant_id;
+                $stock = Stock::where('product_id', $item->product_id)
+                    ->where('outlet_id', $transaction->outlet_id)
+                    ->where('variant_id', $variantId ?? 0)
+                    ->lockForUpdate()
+                    ->first();
+
+                $stock->decrement('reserved_quantity', $item->quantity);
+            }
+
+            foreach ($transaction->discounts as $td){
+                if($td->discount_id){
+                    Discount::where('id', $td->discount_id)->decrement('used_count');
+
+                }
+            }
+            return $transaction->fresh(['items', 'discounts', 'outlet:id,name,code']);
+        });
+    }
+
+    // Get All
 
     public function getAll(User $authUser): LengthAwarePaginator
     {
@@ -212,7 +255,7 @@ class TransactionService
             ->paginate($perPage);
     }
 
-    // ─── Get Detail
+    // Get Detail
 
     public function getDetail(Transaction $transaction, User $authUser): Transaction
     {
@@ -228,7 +271,7 @@ class TransactionService
         ]);
     }
 
-    // ─── Helpers
+    // Helpers
 
     private function validateAndLoadStocks(array $items, int $outletId): array
     {
@@ -236,7 +279,7 @@ class TransactionService
 
         foreach ($items as $item) {
             $variantId = $item['variant_id'] ?? 0;
-            $stockKey  = $item['product_id'] . '-' . $variantId;
+            $stockKey = $item['product_id'] . '-' . $variantId;
 
             $stock = Stock::where('product_id', $item['product_id'])
                 ->where('outlet_id', $outletId)
@@ -271,9 +314,9 @@ class TransactionService
 
     private function validateAndCalculateDiscounts(array $codes, int $subtotal, int $businessId): array
     {
-        $discounts     = [];
+        $discounts = [];
         $totalDiscount = 0;
-        $now           = now();
+        $now = now();
 
         foreach ($codes as $code) {
             $discount = Discount::where('code', $code)
@@ -306,10 +349,10 @@ class TransactionService
                 ? (int) round($subtotal * $discount->value / 100)
                 : $discount->value;
 
-            $discounts[]   = [
+            $discounts[] = [
                 'discount_id' => $discount->id,
-                'code'        => $code,
-                'amount'      => $amount,
+                'code' => $code,
+                'amount' => $amount,
             ];
             $totalDiscount += $amount;
         }
@@ -317,14 +360,14 @@ class TransactionService
         $totalDiscount = min($totalDiscount, $subtotal);
 
         return [
-            'discounts'      => $discounts,
+            'discounts' => $discounts,
             'total_discount' => $totalDiscount,
         ];
     }
 
     private function calculateTaxes(int $taxableAmount, int $businessId): array
     {
-        $taxes    = [];
+        $taxes = [];
         $totalTax = 0;
 
         $activeTaxes = TaxSetting::where('business_id', $businessId)
@@ -332,25 +375,25 @@ class TransactionService
             ->get();
 
         foreach ($activeTaxes as $tax) {
-            $amount  = (int) round($taxableAmount * $tax->rate / 100);
+            $amount = (int) round($taxableAmount * $tax->rate / 100);
             $taxes[] = [
                 'tax_settings_id' => $tax->id,
-                'name'            => $tax->name,
-                'rate'            => $tax->rate,
-                'amount'          => $amount,
+                'name' => $tax->name,
+                'rate' => $tax->rate,
+                'amount' => $amount,
             ];
             $totalTax += $amount;
         }
 
         return [
-            'taxes'     => $taxes,
+            'taxes' => $taxes,
             'total_tax' => $totalTax,
         ];
     }
 
     private function generateTransactionCode(Outlet $outlet): string
     {
-        $date   = now()->format('Ymd');
+        $date = now()->format('Ymd');
         $prefix = $outlet->code . '-' . $date . '-';
 
         $last = Transaction::where('transaction_code', 'like', $prefix . '%')
