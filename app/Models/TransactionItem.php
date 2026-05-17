@@ -22,8 +22,8 @@ class TransactionItem extends Model
 
     protected $casts = [
         'unit_price' => 'integer',
-        'subtotal'   => 'integer',
-        'quantity'   => 'integer',
+        'subtotal' => 'integer',
+        'quantity' => 'integer',
         'refunded_quantity' => 'integer'
     ];
 
@@ -35,5 +35,10 @@ class TransactionItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function getRefundableQuantityAttribute(): int
+    {
+        return $this->quantity - $this->refunded_quantity;
     }
 }
