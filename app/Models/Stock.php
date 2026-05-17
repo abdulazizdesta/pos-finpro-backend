@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use PhpParser\Node\Expr\Cast;
 
 class Stock extends Model
 {
@@ -19,6 +20,13 @@ class Stock extends Model
         'outlet_id',
         'quantity',
         'min_threshold',
+        'reserved_quantity',
+    ];
+
+    protected $casts = [
+        'quantity'  => 'integer',
+        'min_threshold'=> 'integer',
+        'reserved_quantity'        => 'integer',
     ];
 
     public function product():BelongsTo 
@@ -34,5 +42,11 @@ class Stock extends Model
     public function mutations():HasMany 
     {
         return $this->hasMany(StockMutation::class);
+    }
+
+    public function getAvailableQuantityAttribute():int
+    {
+        return $this->quantity - $this->reserved_quantity;
+
     }
 }

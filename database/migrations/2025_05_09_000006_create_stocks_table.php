@@ -14,9 +14,6 @@ return new class extends Migration
                   ->constrained('products')
                   ->restrictOnDelete()
                   ->cascadeOnUpdate();
-            // Sentinel pattern: 0 = tidak ada varian.
-            // FK ke product_variants sengaja TIDAK dibuat
-            // karena tidak ada id = 0. Validasi di StockService.
             $table->unsignedBigInteger('variant_id')
                   ->default(0)
                   ->comment('sentinel: 0 = no variant, no FK intentionally');

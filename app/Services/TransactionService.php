@@ -248,8 +248,10 @@ class TransactionService
                 abort(422, "Stock for product ID {$item['product_id']} was not found in this outlet");
             }
 
-            if ($stock->quantity < $item['quantity']) {
-                abort(422, "Insufficient stock for product ID {$item['product_id']}. Available: {$stock->quantity}");
+            $available_stock = $stock->available_quantity;
+
+            if ($available_stock < $item['quantity']) {
+                abort(422, "Insufficient stock for product ID {$item['product_id']}. Available: {$available_stock}");
             }
 
             $stockMap[$stockKey] = $stock;
