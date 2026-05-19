@@ -61,6 +61,12 @@ class ProductService
             ? $request->business_id
             : $authUser->business_id;
 
+        $outlets = Outlet::where('business_id', $authUser->business_id)->get();
+
+        if ($outlets->isEmpty()) {
+            abort(422, 'Create outlets first before add some products');
+        }
+
         $imageUrl = $this->uploadNewImage($request);
 
         $product = Product::create([
@@ -76,7 +82,6 @@ class ProductService
             'is_active' => $request->boolean('is_active', true),
         ]);
 
-        $outlets = Outlet::where('business_id', $authUser->business_id)->get();
         foreach ($outlets as $outlet) {
             Stock::firstOrCreate([
                 'product_id' => $product->id,
