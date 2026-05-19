@@ -24,9 +24,18 @@ class ProductService
         $search = request('search');
         $category = request('category_id');
         $active = request('is_active');
+        $outletId = request('outlet_id');
 
         $query = Product::query()
-            ->with(['category:id,name', 'stock:id,product_id,quantity'])
+            ->with([
+                'category:id,name',
+                'stock' => function ($q) use ($outletId) {
+                    $q->select('id', 'product_id', 'outlet_id', 'quantity');
+                    if ($outletId) {
+                        $q->where('outlet_id', $outletId);
+                    }
+                }
+            ])
             ->when($search, function ($q) use ($search) {
                 if (app()->environment('testing') || DB::getDriverName() === 'sqlite') {
                     $q->where('name', 'like', "%{$search}%")
@@ -36,7 +45,8 @@ class ProductService
                 }
             })
             ->when($category, fn($q) => $q->where('category_id', $category))
-            ->when(!is_null($active), fn($q) => $q->where('is_active', filter_var($active, FILTER_VALIDATE_BOOLEAN)));
+            ->when(!is_null($active), fn($q) => $q->where('is_active', filter_var($active, FILTER_VALIDATE_BOOLEAN)))
+            ->when($outletId, fn($q) => $q->whereHas('stock', fn($s) => $s->where('outlet_id', $outletId)));
 
         if ($authUser->role->value !== 'superadmin') {
             $query->where('business_id', $authUser->business_id);
@@ -74,7 +84,7 @@ class ProductService
                 'variant_id' => 0,
             ], ['quantity' => 0, 'min_threshold' => 10]);
         }
-        
+
         return $product;
     }
 
