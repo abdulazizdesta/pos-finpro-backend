@@ -30,10 +30,15 @@ class OutletService
 
     public function create(StoreOutletRequest $request, User $authUser): Outlet
     {
+
+        $code = $request->code
+            ? strtoupper($request->code)
+            : $this->generateCode($request->name);
+
         $outlet = Outlet::create([
             'business_id' => $authUser->business_id,
             'name' => $request->name,
-            'code' => strtoupper($request->code),
+            'code' => $code,
             'phone' => $request->phone,
             'address' => $request->address,
             'is_active' => $request->is_active ?? true,
@@ -50,7 +55,7 @@ class OutletService
                 'variant_id' => 0,
             ], ['quantity' => 0, 'min_threshold' => 5]);
         }
-        
+
         return $outlet;
     }
 
@@ -86,5 +91,20 @@ class OutletService
         if ((int) $outlet->business_id !== (int) $authUser->business_id) {
             abort(403, 'Unauthorized access to this outlet');
         }
+    }
+
+    private function generateCode(string $name): string
+    {
+        $words = explode(' ', $name);
+        $code = strtoupper(implode('', array_map(fn($w) => substr($w, 0, 2), $words)));
+        $code = substr($code, 0, 6);
+        $original = $code;
+        $i = 1;
+        while (Outlet::where('code', $code)->exists()) {
+            $code = $original . $i;
+            $i++;
+        }
+
+        return $code;
     }
 }
