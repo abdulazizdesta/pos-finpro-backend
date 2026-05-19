@@ -37,7 +37,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     });
 
     // Superadmin, Owner & Admin
-    Route::middleware('role:superadmin,owner,admin')->group(function () {
+    Route::middleware('role:superadmin,owner,admin,cashier')->group(function () {
         Route::apiResource('categories', CategoryController::class);
 
         Route::delete('products/bulk', [ProductController::class, 'bulkDelete']);

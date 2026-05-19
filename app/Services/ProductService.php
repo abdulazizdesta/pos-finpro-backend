@@ -6,7 +6,9 @@ use App\Http\Requests\BulkImportProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Jobs\BulkImportProductJob;
+use App\Models\Outlet;
 use App\Models\Product;
+use App\Models\Stock;
 use App\Models\User;
 use App\Traits\GeneratesSku;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -24,7 +26,7 @@ class ProductService
         $active = request('is_active');
 
         $query = Product::query()
-            ->with(['category:id,name'])
+            ->with(['category:id,name', 'stock:id,product_id,quantity'])
             ->when($search, function ($q) use ($search) {
                 if (app()->environment('testing') || DB::getDriverName() === 'sqlite') {
                     $q->where('name', 'like', "%{$search}%")
@@ -51,7 +53,7 @@ class ProductService
 
         $imageUrl = $this->uploadNewImage($request);
 
-        return Product::create([
+        $product = Product::create([
             'business_id' => $businessId,
             'category_id' => $request->category_id,
             'name' => $request->name,
@@ -63,6 +65,17 @@ class ProductService
             'has_variants' => $request->boolean('has_variants', false),
             'is_active' => $request->boolean('is_active', true),
         ]);
+
+        $outlets = Outlet::where('business_id', $authUser->business_id)->get();
+        foreach ($outlets as $outlet) {
+            Stock::firstOrCreate([
+                'product_id' => $product->id,
+                'outlet_id' => $outlet->id,
+                'variant_id' => 0,
+            ], ['quantity' => 0, 'min_threshold' => 10]);
+        }
+        
+        return $product;
     }
 
 
@@ -166,11 +179,13 @@ class ProductService
             return null;
         }
 
-        return Storage::url($request->file('image')->store('public/products'));
+        $path = $request->file('image')->store('products', 'public');
+        return '/storage/' . $path;  // ← manual aja
     }
 
     private function deleteImageFile(string $imageUrl): void
     {
-        Storage::delete(str_replace('/storage/', 'public/', $imageUrl));
+        $path = str_replace('/storage/', '', $imageUrl);
+        Storage::disk('public')->delete($path);
     }
 }

@@ -53,6 +53,7 @@ class AuthController extends Controller
                 'role'     => $user->role,
                 'business' => $user->business?->name,
                 'outlet'   => $user->outlet?->name,
+                'outlet_id' => $user->outlet?->id,
             ]);
         } catch (Throwable $th) {
             ApiLogger::error('AuthController@login', $th);
@@ -78,6 +79,7 @@ class AuthController extends Controller
                 'role'     => $user->role,
                 'business' => $user->business?->name,
                 'outlet'   => $user->outlet?->name,
+                'outlet_id'    => $user->outlet?->id,
             ]);
         } catch (Throwable $th) {
             ApiLogger::error('AuthController@loginWithPin', $th);
@@ -100,6 +102,7 @@ class AuthController extends Controller
             'role'     => $user->role,
             'business' => $user->business?->name,
             'outlet'   => $user->outlet?->name,
+            'outlet_id'    => $user->outlet?->id,
         ]);
     }
 }

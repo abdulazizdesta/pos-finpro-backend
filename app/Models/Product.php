@@ -11,16 +11,24 @@ class Product extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'business_id', 'category_id', 'name', 'sku',
-        'description', 'price', 'cost_price', 'image_url',
-        'has_variants', 'is_active', 'deleted_by',
+        'business_id',
+        'category_id',
+        'name',
+        'sku',
+        'description',
+        'price',
+        'cost_price',
+        'image_url',
+        'has_variants',
+        'is_active',
+        'deleted_by',
     ];
 
     protected $casts = [
-        'price'        => 'integer',
-        'cost_price'   => 'integer',
+        'price' => 'integer',
+        'cost_price' => 'integer',
         'has_variants' => 'boolean',
-        'is_active'    => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function business(): BelongsTo
@@ -31,5 +39,10 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function stock()
+    {
+        return $this->hasOne(Stock::class);
     }
 }

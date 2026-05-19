@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Http\Requests\StoreOutletRequest;
 use App\Http\Requests\UpdateOutletRequest;
 use App\Models\Outlet;
+use App\Models\Product;
+use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -28,14 +30,28 @@ class OutletService
 
     public function create(StoreOutletRequest $request, User $authUser): Outlet
     {
-        return Outlet::create([
+        $outlet = Outlet::create([
             'business_id' => $authUser->business_id,
-            'name'        => $request->name,
-            'code'        => strtoupper($request->code),
-            'phone'       => $request->phone,
-            'address'     => $request->address,
-            'is_active'   => $request->is_active ?? true,
+            'name' => $request->name,
+            'code' => strtoupper($request->code),
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'is_active' => $request->is_active ?? true,
         ]);
+
+        $products = Product::where('business_id', $authUser->business_id)
+            ->where('is_active', true)
+            ->get();
+
+        foreach ($products as $product) {
+            Stock::firstOrCreate([
+                'product_id' => $product->id,
+                'outlet_id' => $outlet->id,
+                'variant_id' => 0,
+            ], ['quantity' => 0, 'min_threshold' => 5]);
+        }
+        
+        return $outlet;
     }
 
     public function update(UpdateOutletRequest $request, Outlet $outlet, User $authUser): Outlet
