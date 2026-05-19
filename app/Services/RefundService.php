@@ -24,14 +24,13 @@ class RefundService
     {
         $this->authorizeTransaction($transaction, $authUser);
 
-        $statusPayment = $transaction->payment_status;
-        $transactionTime = $transaction->created_at;
-
-        if ($statusPayment !== 'paid') {
+        $transaction->refresh();
+        
+        if ($transaction->payment_status !== 'paid') {
             abort(422, 'transaction has not been paid');
         }
 
-        if (now()->diffInHours($transactionTime) > 24) {
+        if ($transaction->created_at->diffInHours(now()) > 24) {
             abort(422, 'the refund deadline has been reached');
         }
 
