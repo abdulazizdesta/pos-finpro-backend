@@ -20,7 +20,7 @@ class UpdateProductRequest extends FormRequest
 
         return [
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'name' => ['sometimes', 'string', 'max:150'],
+            'name' => ['sometimes', 'string', 'max:150', 'min:3'],
             'sku' => [
                 'nullable',
                 'string',
@@ -43,6 +43,7 @@ class UpdateProductRequest extends FormRequest
         return [
             'category_id.exists' => 'Category not found',
             'name.max' => 'Product name must not exceed 150 characters',
+            'name.min' => 'Product name at least 3 characters',
             'sku.unique' => 'SKU already exists',
             'sku.max' => 'SKU must not exceed 50 characters',
             'price.numeric' => 'Price must be a number',

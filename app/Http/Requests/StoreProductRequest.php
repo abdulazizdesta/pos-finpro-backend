@@ -17,7 +17,7 @@ class StoreProductRequest extends FormRequest
         return [
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'business_id' => ['nullable', 'integer', 'exists:businesses,id'],
-            'name' => ['required', 'string', 'max:150'],
+            'name' => ['required', 'string', 'max:150', 'min:3'],
             'sku' => [
                 'nullable',
                 'string',
@@ -42,6 +42,7 @@ class StoreProductRequest extends FormRequest
             'business_id.integer' => 'Business ID must be a number',
             'name.required' => 'Product name is required',
             'name.max' => 'Product name must not exceed 150 characters',
+            'name.min' => 'Product name at least 3 characters',
             'sku.unique' => 'SKU already exists',
             'sku.max' => 'SKU must not exceed 50 characters',
             'price.required' => 'Price is required',
