@@ -31,7 +31,7 @@ class ReportService
         $baseQuery = $this->baseQuery($authUser->business_id);
 
         $summary = (clone $baseQuery)->selectRaw('
-        COUNT * as total_transactions,
+        COUNT (*) as total_transactions,
         COALESCE(SUM(total), 0) as total_revenue,
         COALESCE(AVG(total), 0) as average_per_transactions
         ')->first();
