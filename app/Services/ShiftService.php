@@ -8,6 +8,7 @@ use App\Models\Outlet;
 use App\Models\Shift;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 
 class ShiftService
 {
@@ -24,29 +25,12 @@ class ShiftService
         }
 
         return Shift::create([
-            'user_id'      => $authUser->id,
-            'outlet_id'    => $request->outlet_id,
-            'opened_at'    => now(),
+            'user_id' => $authUser->id,
+            'outlet_id' => $request->outlet_id,
+            'opened_at' => now(),
             'opening_cash' => $request->opening_cash,
-            'status'       => 'open',
+            'status' => 'open',
         ]);
-    }
-
-    public function close(CloseShiftRequest $request, Shift $shift, User $authUser): Shift
-    {
-        $this->authorizeOutlet($authUser, $shift->outlet_id);
-
-        if ($shift->status === 'closed') {
-            abort(422, 'Shift Closed');
-        }
-
-        $shift->update([
-            'closed_at'    => now(),
-            'closing_cash' => $request->closing_cash,
-            'status'       => 'closed',
-        ]);
-
-        return $shift->fresh(['user:id,name', 'outlet:id,name']);
     }
 
     public function getActive(User $authUser, int $outletId): Shift
@@ -85,6 +69,28 @@ class ShiftService
         $this->authorizeOutlet($authUser, $shift->outlet_id);
 
         return $shift->load(['user:id,name', 'outlet:id,name']);
+    }
+
+    public function close(CloseShiftRequest $request, Shift $shift, User $authUser): Shift
+    {
+        $this->authorizeOutlet($authUser, $shift->outlet_id);
+
+        if ($shift->status === 'closed') {
+            abort(422, 'Shift sudah ditutup');
+        }
+
+        $minimumClose = Carbon::parse($shift->opened_at)->addHours(4);
+        if (now()->lt($minimumClose)) {
+            abort(422, 'Shift cannot be closed yet.');
+        }
+
+        $shift->update([
+            'closed_at' => now(),
+            'closing_cash' => $request->closing_cash,
+            'status' => 'closed',
+        ]);
+
+        return $shift->fresh(['user:id,name', 'outlet:id,name']);
     }
 
     private function authorizeOutlet(User $authUser, int $outletId): void

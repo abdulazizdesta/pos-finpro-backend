@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DiscountController;
 use App\Http\Controllers\Api\OutletController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\RefundController;
+use App\Http\Controllers\api\ReportController;
 use App\Http\Controllers\Api\ShiftController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\TaxSettingController;
@@ -68,5 +69,11 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::put('transactions/{transaction}/cancel', [TransactionController::class, 'cancel']);
         Route::post('transactions/{transaction}/refund', [RefundController::class, 'store']);
     });
+
+    // Reports (owner and admin)
+    Route::prefix('reports')->middleware('role:superadmin,owner,admin')->group(function () {
+        Route::get('sales', [ReportController::class, 'getSales']);
+    });
+
 
 });
