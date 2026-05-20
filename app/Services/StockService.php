@@ -111,6 +111,7 @@ class StockService
         $query = Stock::query()
             ->with(['outlet:id,name', 'product:id,sku,name'])
             ->whereHas('outlet', fn($q) => $q->where('business_id', $authUser->business_id))
+            ->whereHas('product')
             ->when(request('outlet_id'), fn($q) => $q->where('outlet_id', request('outlet_id')))
             ->when(request('product_id'), fn($q) => $q->where('product_id', request('product_id')));
 
