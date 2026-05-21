@@ -11,7 +11,7 @@ class StoreOutletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'      => ['required', 'string', 'max:100'],
+            'name'      => ['required', 'string', 'max:100', 'min:3'],
             'code'      => ['nullable', 'string', 'max:10', 'unique:outlets,code', 'alpha_num'],
             'phone'     => ['nullable', 'string', 'max:20'],
             'address'   => ['nullable', 'string'],
@@ -24,6 +24,7 @@ class StoreOutletRequest extends FormRequest
         return [
             'name.required'     => 'Outlet name is required',
             'name.max'          => 'Outlet name must not exceed 100 characters',
+            'name.min'          => 'Outlet name at least 3 characters',
         ];
     }
 }

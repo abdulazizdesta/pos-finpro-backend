@@ -17,7 +17,7 @@ class AdjustStockRequest extends FormRequest
     {
         return [
             'quantity_change' => ['required', 'integer', 'not_in:0'],
-            'notes' => ['required', 'string', 'max:255'],
+            'notes' => ['required', 'string', 'max:255', 'min:10'],
         ];
     }
 
@@ -29,6 +29,7 @@ class AdjustStockRequest extends FormRequest
             'quantity_change.not_in' => 'Quantity change must not be zero',
             'notes.required' => 'Notes are required for stock adjustment',
             'notes.max' => 'Notes must not exceed 255 characters',
+            'notes.min' => 'Notes must being descriptive',
         ];
     }
 }

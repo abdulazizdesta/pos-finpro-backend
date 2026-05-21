@@ -12,7 +12,7 @@ class UpdateOutletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'      => ['sometimes', 'string', 'max:100'],
+            'name'      => ['sometimes', 'string', 'max:100', 'min:3'],
             'code'      => ['sometimes', 'string', 'max:10', 'alpha_num', Rule::unique('outlets', 'code')->ignore($this->route('outlet'))],
             'phone'     => ['sometimes', 'nullable', 'string', 'max:20'],
             'address'   => ['sometimes', 'nullable', 'string'],
@@ -24,6 +24,7 @@ class UpdateOutletRequest extends FormRequest
     {
         return [
             'name.max'        => 'Outlet name must not exceed 100 characters',
+            'name.min'        => 'Outlet name at least 3 characters',
             'code.unique'     => 'Outlet code already exists',
             'code.alpha_num'  => 'Outlet code must be alphanumeric',
             'code.max'        => 'Outlet code must not exceed 10 characters',
