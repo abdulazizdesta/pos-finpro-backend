@@ -1,0 +1,1644 @@
+{
+  "info": {
+    "_postman_id": "7c8c61ff-a7de-4528-a7cd-eb410e024979",
+    "name": "POS Finpro",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53226363",
+    "_collection_link": "https://go.postman.co/collection/53226363-7c8c61ff-a7de-4528-a7cd-eb410e024979?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Report",
+          "item": [
+            {
+              "name": "Sales",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reports/sales/export",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reports",
+                    "sales",
+                    "export"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Sales",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/reports/sales/export",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "reports",
+                        "sales",
+                        "export"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Host",
+                      "value": "localhost:8000"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "close"
+                    },
+                    {
+                      "key": "X-Powered-By",
+                      "value": "PHP/8.3.29"
+                    },
+                    {
+                      "key": "Cache-Control",
+                      "value": "public"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Wed, 20 May 2026 09:04:15 GMT"
+                    },
+                    {
+                      "key": "Last-Modified",
+                      "value": "Wed, 20 May 2026 09:04:15 GMT"
+                    },
+                    {
+                      "key": "Content-Disposition",
+                      "value": "attachment; filename=laporan-penjualan-2026-05-20.xlsx"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "6491"
+                    },
+                    {
+                      "key": "Accept-Ranges",
+                      "value": "bytes"
+                    },
+                    {
+                      "key": "X-RateLimit-Limit",
+                      "value": "120"
+                    },
+                    {
+                      "key": "X-RateLimit-Remaining",
+                      "value": "118"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\G�D�Z\u0001\u0000\u0000�\u0004\u0000\u0000\u0013\u0000\u0004\u0000[Content_Types].xmlSV\u0000\u0000���N�0\u0010E�|E�-J��@\b5��\u0012*Q>`�'�UǶl���L����@�nbE�gr=��tW�d�>(k\n6�r��\u0011V*�,���)�cI�`$hk�`{\fl:�\u001a/�\u000eCBb\u0013\nV���9\u000f��\u001aBf\u001d\u001a�RZ_C�W��\u000e�\n��o���\u000bk\"���ƃM�/��Jb2\u0007\u001f��&\f�i\u001e�\r��(#?�\n<t]0pN+\u0001�\n�\u001b#QS[�J��b]�$km�\u001b\u0017~\u0012\u0018�^c\u0018�\n�#�P!�Zg��<�\u0012�:&�;r�2���y�C�\u0019)�=�R����C�u��A�~�aK��\u0013���ջ��K�ެY\r��\u001d:��޺�\t5�\u0000l��(SG���:�^��\u001eχ\u001f��Q��xH��&�v\u0019>X?c���k�*�(_�����}�>���\u000bk�\u0001PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\\u0017�78�\u0000\u0000\u0000K\u0002\u0000\u0000\u000b\u0000\u0004\u0000_rels/.relsSV\u0000\u0000���j�0\f��{\n�{���1F�^ʠ�2�\u0007�l�$���-}�y��\u0005��Î��O��v�y\u001a�;�؋Ӱ.JP��޵\u001a^��\u0003���Y\u001aű�3G�Ww�g\u001e)���>�\fqQC��D���b!�]�i$L��3���\f�2n��\u001e�o\u0006T\u000b�:Z\r�h����[��4�ი��]��\u0002yN�,ە\u000f�>�>\u000f�j\n-'\rV�)�#��EF\u0003^6��n���8q\"K��H��>_\u0019ׄ����eƏ�<⇄�Ud�v��\rT�PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\�$�V�\u0000\u0000\u0000�\u0002\u0000\u0000\u001a\u0000\u0004\u0000xl/_rels/workbook.xml.relsSV\u0000\u0000���j�0\u0010D��\n��ZvZJ)�s)�\\[�\u0003���LlIh7m��U\u001bH\u001c\b�\u0007�Ĭؙ�H���8�OL�\u0007��*J\u0010�M���\u0014|4��g\u0010��[=\u0004�\n&$��w�7\u001c4�\u001dr}$�M<)p��EJ2\u000eGME���M\u001bҨ9��ɨ�^w(We�$��\u0003�\u000bO��\n��V �)��C��\u0006_�9���J�$���/\u001a�:d\u0005G]d\u001f���WK�s��s��<\u000e�[\f\u000f�V�tB��)?���\u0016��0_!��!�\u0019�4�E�ǩ\u0019y���\u001fPK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\�\u001c�\u001e�\u0001\u0000\u0000M\u0003\u0000\u0000\u0010\u0000\u0004\u0000docProps/app.xmlSV\u0000\u0000�S�n�0\f��+\f�\u001b9�0\f��bK7��b\u0001��gN�c��$�����''��;M�G������sE��l��JQ�7��~W�����Ϣ \u0006_�\u000b\u001e+qD\u0012���Z�\u00101�E*���J��q)%�\u0016;�Y.�\\iB�s�v24�5x\u0017̾C�rQ��$\u001e\u0018}��M\u001c\u0005�Yq������\f��y{�YO�/1:k���њ\u0014(4\\|;\u0018tJN�*\u000bm���.���jc��*\u000b�\u0006\u001c��o\tu�0�l\r6�V=/{4\u001cRA�w��B\u0014?�p�S�\u001e�\u0005��L;\u0007'�\"q�/!�R�Ȥ�<�)w��G=?\u00112�&��H��\u0016��\u001dҏf\r���x>u|� &\u001e\u001f �\u0004�X���\u0007\u0007���KӿڬB\u0017��]�\u0011=��\u001d\u000e�\u0011=X�JOq\u001b����ڴ����3^ƘP��ur��5�0L~\u001d�!�Z�;�/\u0012�\u000b��y>�\u000e=_��|N\u000f�S��#�?PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\��\u0007=r\u0001\u0000\u0000\u000e\u0003\u0000\u0000\u0011\u0000\u0004\u0000docProps/core.xmlSV\u0000\u0000���n�0\u0010D�����*؁B�(\tR�8��T����\u000b\u0018\u0012۲MC��N\u0002\u0001\n�\u001e'3~�\u001dm2>\u0014y�\u0003�\n%S\u0014�\b\n@2Ņ\\��c9\r_P`\u001d���JB�*�h�=$L�L\u0019X\u0018��8\u00016� ic�S�qN�\u0018[���ڞOHo��)��Ҭ��lG׀���p\u0001�r�(������C��\u001b\u0000g\u0018r(@:��^��Y\u0007��w\u001f4�E�\u0010��p7z2����.X�e�\u001c4Q?����f�PȺ*\u0006(K8��\u0001��>�N�R\u0006�V'�«{̩us��J\u0000�n㷑�f�\u0001\u001e���v���9��-�(��($ðO��(&Oq4|$�1!�\u0018W�3�8���\u0013���\t�C6�Z\u0019*�\u0005���T6]�^��`�\u0011��[�\u001a���v��\u0005�Z�\u0013��\u001dT�2�fM]gU��_n�L�Z��\tg�PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\s�{Y�\u0005\u0000\u0000�\u001b\u0000\u0000\u0013\u0000\u0004\u0000xl/theme/theme1.xmlSV\u0000\u0000�YOo�6\u0014��S\u0010���l)u�:E��햦\r\u0012�C��DK�)Q 餾\r�q��aݰˀ�v\u0018�\u0015h�]�O����\u0001�\n{�c���4i3lC�-������Q�z�A��!\u0011��c9�\u001b\u0016\"��\u0003��\u001d��pp�m!�p\u0012`�\u0013ұfDZ�6?��7TDb��<�\u001b�cEJ�\u001b�-}���2OI\u0002kc.b�`(B;\u0010�\b���n6\u001akv�ib�\u0004����xL}��\u0019Kksμ��+Q2��8�s�:E�\r&N�#g��\u0004:Ĭc���\u001f\r�\u0003e!�������?��y�^\u00101UC��\r�OIW\u0012\u0004�fN'�т�\u0019��W�\u0017��\u0005�U\\�����\u0005�\u001c�}\u001f,uV���t�\n    <5P�ʻ��\u001an\u0015��o��׻ݮ�^���xw\u0005�n��[�\n�]�U��[��Z\u0005�-�k+����5���A\u0011��d\u0005��s\u0011�\u0005d��\r#�\r��|\u0003,Q���\n�D���\u0018��b\u0000�<�X�\u0004�YJ��\u0007\\\u000f�#Aq&\u0000o\u0010��\u0014S�\\��d!�\u000b����Q�!#��W�x��)z�����g�\u000f>~����O\u0006�\u001b8\tu�}��7��?�~���f�����鯿|a\u0006*\u001d��'�?{��������\u0001�%�H�\u000fiL$�E��>��6�\u00002\u0012�\u0018F�V(p\u0004H\u0003���\n��\f3\u0013�K�λ+�\u0000��ק�+�\u001eDb��\u0001�\u0013�\u0015�.�˅ќ�L�n�4\t���T��c|h��;\u0011��4��LM,{\u0011���� �8$\tQ([�\u0013B\fd�(��u���K>V�\u001eE]L�.\u0019ґ2\u0013ݠ1�efR\u0010B]���]����~�\u001cV��\u0010��X\u0012Vq�u\n        <U86j�c�#ob\u0015��<�\t��p� �!a\u001c�\u0003\"��涘U���P��a�e���\u0014�NLț�s\u001d��'�\bǩQg�D:�C9�-��\u001eWF%x5C�1�\u0001'��K�:_Zߡad� ��T�R��j>��\u0018����J\u001d�䴲�(���e{\u000e߂C̔<'�u\u001d�X���4�#�\u0015�+��\n�.V�\\����,Ŷ�k�l���{L\u0019;P3Fnʼ�K0/\u0018�d>ȉ\u0016}~\u001a�c)��\u000b\u0005Ο���c���\b� ��%��d\u001dJ�r\t�\u000b��w~E�`s>���j�\u0007�tK�o.��P�Z\u0019��\nk]y;aN\u0001<�4�3K�N�fkބ�A8{��5\u000bѰQ0#A����<,\u0017\u001e\"\u0019န1r��8�3���z�i��[o'�,A�Ź5�\u000b�Rc%J�j:��:BG����,��c����8\u0005~2+U��I��Ui�k�����m�4j\r��H�T�XF\u0005U�4\u001d�,�ozn懋1�P�ΦE����Z�'CK�c⫚��\\�SE�A\u0014\u001c�\u0011��}\fz���\n����9\u001f\b�P��x��/���k�2;0K#\\֤�\u0016�\u0002�?/t�G�zv��ohJ�\u0002M��]S��\u000b\rn+ȯ^�\u0006\b��=ڱ�P\u0011�*�F�\u001f\bh\u001crY�\u0017���TB,{���J\u000e�u��Q\u0014�0R�4D�B�S� dO�v�������9���,ԕi�;\"��\r��]��P4�&�#r�ɠ٦�\u001a���p���t>��\u0007KA�yz\u0011W+��Q��v*��m�-nzg>jS����\u000b\n7\u0015>[��C�\u000f�G��\u0012�F��.�o19\u0002�ۚq\u0019���Z��]\u0013�l>5g�j�}��7w�g�w����\u0014���L>Z�3����m�\u001fM���{�\u0007p)����\u0000>��t�oPK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\?\u0000M�\u000e\u0001\u0000\u0000\u001e\u0002\u0000\u0000\u0014\u0000\u0004\u0000xl/sharedStrings.xmlSV\u0000\u0000�Q�N�0\u0010��\u0014MOz�v��\u001a\u0003l�Q�JX��\u000f0YFh�\u0016;���[��\u00044�Ҥ��L�l߇���%et�W��\f��4J�)?�w�\u0015g�@7�\u001b�)�@���,!r�[5��sn�\u0016�N\u001d\u000e@�\u0019Q{���\u0001���V�h\u0011\u001a�\u0010�ЋHʵ\u0018@i�&�^'�1�v���g\t�,qY�W�C^���\u001d�\"/\u0013�D|�߂\n�2\r�ထhX0�\u000f\u000f��c��������\u00164�\u000b���\n��#�GX�l\u0015���\u000b«\u0003�\u000f&�N��M��\u0017�\u001at�B?�w��C��a��a���\"\u0019�\u0003\u0019\u0007Ѳu_��\u000f(�\u0007g�PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\=�%\u001d�\u0001\u0000\u0000�\u0003\u0000\u0000\r\u0000\u0004\u0000xl/styles.xmlSV\u0000\u0000�SM��0\f��W\u0018߻N\u0006Z�%��\u0016\u0002=t)�\u0014zub%c�/le���׎3�\f��\\��$=ɲR=]�\"g�AZS��\u0004Lo�4cM\u001d���(\tȍ��\u001a��\f�>5婢���\u0013\u0000���\u0018\u001c��y\b��@\u0013iBMO�П@��`\u001d��\u0019��\u001c��G\u0016b\u000e\u0017!)i�\u000eE�i.\rm*3�Vc ��\fִ���\u0006k6���h����ZC�\u000e\u0007��\u000f�)c\u0013���f�,��[e=�cWӶ-�/ц�U�\u001bW��2�,\u0017^�\u0010ېJ��:�L4���M\u001b\r����`k���D������.a9b��z\u0011\u001fo?�L5��\u0001c���)�h\u001dKND�#\u0010���p�$�\u0019+��=(��^��p�}\u0019H~��\"\r���_alh�Y&\u001bI���_�^�ג����'�95�6oH��'݁o�%��D����hl�\u0017%G��hlms7���o,I�Q��TM��\u001e�$\u0015J��\u0014���\f�{����S�\"`���㍪�����L�Q?���\u001a��-t�i����?PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\��\u0017ĵ\u0001\u0000\u0000�\u0002\u0000\u0000\u000f\u0000\u0004\u0000xl/workbook.xmlSV\u0000\u0000��Mo\u00131\u0010���\n�w�)j+���DK�R���r�xg�C�%�7i��\u0019{\u0013(�؋=�|?�����j��)�V\u001f\u001fʹBoBG����׫�o��\f�\u0003\u001b<��\tY�/_-v!=lBxP�?�\bF|1!cڢ.��V\u000f9�yӰ\u0019�\u0001\u001f��^<}H\u000e���aɁ�\u0007��l�f6;k\u001c��W����\u0011��\f^\u00063:�y*��B��x��z����ݴ��\u0018���y\u001f�V\u00168�(c��\u00131�\u000e�\u0012�\u0018ߏd�q:;�����7I\t'�J�\u0007�\u001f{G\t*�\u001d���\u0017S�ɴ�5lZ-�a�aE6c���\u001fS\u0018c��(\u0010{J�o\u000b�\u001a�ȓ��2W\u000f�%����\u0014\u0012=\u0007��ޚ\u0014�=$\u0017_͕^�R\u0014\n�̿�\u00196�\n�V�ͤז�6d)?���-���\u0017k�7;��W\n�\u0010C\u0002�n��\u001c��/-�}%3\u001f\u000b�9�%]u'�ءB�=y�\nH\u0016]f3��\u001c%�]�t�?\u000b�V\u0017j�}\u0011\\�X�J��Gk/D��\u0003L\u001d�71���E)}\u000f\u000f��\u0005PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\.^9�?\u0003\u0000\u0000\n\t\u0000\u0000\u0018\u0000\u0004\u0000xl/worksheets/sheet1.xmlSV\u0000\u0000�V�R�0\u0010}�Wx�Nl�F�I�\u0014f�\t\u0003�<+�:� K��$Я�J��\u0004��\u0003�v���ٕV���`�\u001e������\u0017�\u001e�D��o���������&<%Lp��o���ŗ�A�\u0017�\u0003h\u000f\t��$\t\u0006K\t\n�\u001e|��j��Z�� PI\u000e\u0005Q=Q\u0002�H&dA4�r\u001b(Đ�2\u0015,��8(\b�5�T��!��&p#�]\u0001\\W$\u0012\u0018�X��i�\u001a���,�T�\u0003���q$�T��/\u001a~�+h\"�\u0012��%���}�2\u000e�:_���5��6\u0015�9u\u0015D���\u000b�+�7\u001bʨ~�\\�W$ӻ-\u0017�l\u0018�#�E\u0012�H���2�i1��{����f�ý�Ԯ@Ao���\u0001O��8\u001e�6��\u0011,fA�K)�9���l�����|a?�M᠜����\u0011\u0018$\u001aRKmN�F�\u0017\u0013�C\u0017�r���wI�\u001f�\u0006O��;��\u000f�\u0014�\u0016\u000b��0h$�\\&9�{X\u0002cF\u0003\u0002��r�՚\u001c�\u0011��;�����\u001dӘ�\u0016�Z����խ�\u0001{`\u000f�'�\u000fU\u0019_S�\r�d1���ɪ}%1#\u0017M\u0007�81N#\u0010�\u0015��E8\u000b�(+�?Ĵ�~'��\u0000�\u0016hc�n��M:�$\u001d8�A7p�\t\u001c:�ቚ�g:F�t#�ntB���ݤ�Nұ\u0003�\n            <!uc�n��N�K\u0007\u0018����(<\u000e.��Qw�Igʉ��䜜4�JVy��(\f{�9eqg���58�\u0015w�?�\u00158cQJ����/��}\u001f�0�s�z\u001eA׳�cU�-�$rK\u0011� �H��N�jH�Z�Ү�l�֢h���\u0017��c�\t�\u001b���D��+I\t��\u0005;�BR|��35��[\u0001\u001b�\u0010s\u0007G!�F��ho��~��έi����MŁ?����������\u0015�4�@b�u�~�\u0003o��\u0006VT*ݺ��g�s|S���0���Ww��㍞��e�;�qYe���\u001a/2�~�\u001af�\u0002\\#3�Zȑe�\u0016tl�\rX̴y����KĎ��\"\rڟ1�PK\u0003\u0004\u0014\u0000\u0000\b\b\u0000���\\�KR\"x\u0000\u0000\u0000�\u0000\u0000\u0000#\u0000\u0004\u0000xl/worksheets/_rels/sheet1.xml.relsSV\u0000\u0000M�1\u000e\u0002!\u0010\u0000{_A��@\u000bc�q��\u0000�\u000f�p+\u0010a!,1�{)-'��y����$\u0016�p�\f(bW�����~ݟAIG�0\u0015&\u000b_\u0012X��|��}4\u0012b\u00155&,\u0016B�����@\u0019e*�x�gi\u0019���uE�BO�h�I��\u0007��\u0007PK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\G�D�Z\u0001\u0000\u0000�\u0004\u0000\u0000\u0013\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000\u0000\u0000\u0000\u0000[Content_Types].xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\\u0017�78�\u0000\u0000\u0000K\u0002\u0000\u0000\u000b\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000�\u0001\u0000\u0000_rels/.relsPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\�$�V�\u0000\u0000\u0000�\u0002\u0000\u0000\u001a\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000�\u0002\u0000\u0000xl/_rels/workbook.xml.relsPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\�\u001c�\u001e�\u0001\u0000\u0000M\u0003\u0000\u0000\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000�\u0003\u0000\u0000docProps/app.xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\��\u0007=r\u0001\u0000\u0000\u000e\u0003\u0000\u0000\u0011\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000�\u0005\u0000\u0000docProps/core.xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\s�{Y�\u0005\u0000\u0000�\u001b\u0000\u0000\u0013\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u00002\u0007\u0000\u0000xl/theme/theme1.xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\?\u0000M�\u000e\u0001\u0000\u0000\u001e\u0002\u0000\u0000\u0014\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000\"\r\u0000\u0000xl/sharedStrings.xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\=�%\u001d�\u0001\u0000\u0000�\u0003\u0000\u0000\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000f\u000e\u0000\u0000xl/styles.xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\��\u0017ĵ\u0001\u0000\u0000�\u0002\u0000\u0000\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000X\u0010\u0000\u0000xl/workbook.xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\.^9�?\u0003\u0000\u0000\n\t\u0000\u0000\u0018\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000>\u0012\u0000\u0000xl/worksheets/sheet1.xmlPK\u0001\u0002\u0003\u0006\u0014\u0000\u0000\b\b\u0000���\\�KR\"x\u0000\u0000\u0000�\u0000\u0000\u0000#\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000 \u0000\u0000\u0000�\u0015\u0000\u0000xl/worksheets/_rels/sheet1.xml.relsPK\u0005\u0006\u0000\u0000\u0000\u0000\u000b\u0000\u000b\u0000�\u0002\u0000\u0000t\u0016\u0000\u0000\u0000\u0000"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();\r",
+                  "pm.test(\"200 & token exists\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "    pm.expect(json.data).to.have.property(\"token\");\r",
+                  "    pm.environment.set(\"token\", json.data.token);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"desta@retail.com\",\r\n    \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login PIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();\r",
+                  "pm.test(\"200 & token exists\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "    pm.expect(json.data).to.have.property(\"token\");\r",
+                  "    pm.environment.set(\"token\", json.data.token);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"cashier@gmail.com\",\r\n    \"pin\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/pin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                "pin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Me",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();\r",
+                  "pm.test(\"200 & token exists\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "    pm.expect(json.data).to.have.property(\"token\");\r",
+                  "    pm.environment.set(\"token\", json.data.token);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"business_name\": \"Tokobagus\",\r\n    \"owner_name\": \"Jane Doe\",\r\n    \"email\": \"jane@toko.com\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get All",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"John kasir\",\r\n    \"email\": \"johnpierax@retail.com\",\r\n    \"password\": \"password123\",\r\n    \"role\": \"cashier\",\r\n    \"is_active\": true,\r\n    \"business_id\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Supri\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/categories/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Body Wash\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Bambang\",\r\n    \"email\": \"bambang@retail.com\",\r\n    \"password\": \"password123\",\r\n    \"role\": \"cashier\",\r\n    \"is_active\": true,\r\n    \"outlet_id\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categories/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Match enak\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/products/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ids\": [6, 7]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/products/bulk",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "bulk"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Kopi susu gula aren",
+                  "type": "text",
+                  "uuid": "bfb6cb3c-a09a-4800-b130-2b4fcd5ef23f"
+                },
+                {
+                  "key": "category_id",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "bfe68865-9242-488b-8940-accc1b506531"
+                },
+                {
+                  "key": "price",
+                  "value": "2500",
+                  "type": "text",
+                  "uuid": "762f3bf8-8cea-4011-a103-e798d86e2566"
+                },
+                {
+                  "key": "cost_price",
+                  "value": "1500",
+                  "type": "text",
+                  "uuid": "9ab7a8a9-66b6-4bdf-95d4-34667b1e7045"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "uuid": "87807d0d-4165-4417-afc8-eb17e3835921",
+                  "src": "/C:/Users/MyBook Hype AMD/Downloads/Parasite (2019) - Bong Joon Ho.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Store CSV",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "87807d0d-4165-4417-afc8-eb17e3835921",
+                  "src": "/C:/Users/MyBook Hype AMD/Downloads/products_import.csv"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/products/bulk-import",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "bulk-import"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stock",
+      "item": [
+        {
+          "name": "Init",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"product_id\": 1,\r\n    \"outlet_id\": 1,\r\n    \"quantity\": 50,\r\n    \"min_threshold\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/stocks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stocks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/stocks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stocks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Mutations",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/stocks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stocks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restock",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"quantity\": 30,\r\n    \"notes\": \"Restock dari supplier\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/stocks/1/restock",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stocks",
+                "1",
+                "restock"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restock Copy",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"quantity_change\": -5,\r\n    \"notes\": \"5 produk rusak\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/stocks/1/adjust",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stocks",
+                "1",
+                "adjust"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shift",
+      "item": [
+        {
+          "name": "Open",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"outlet_id\": 1,\r\n    \"opening_cash\": 500000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/shifts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "shifts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/shifts/active?outlet_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "shifts",
+                "active"
+              ],
+              "query": [
+                {
+                  "key": "outlet_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Close",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"closing_cash\": 750000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/shifts/1/close",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "shifts",
+                "1",
+                "close"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transaction",
+      "item": [
+        {
+          "name": "Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transactions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"shift_id\": 2,\r\n    \"items\": [{\"product_id\": 1, \"quantity\": 1}],\r\n    \"payment_method\": \"cash\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/transactions/:id/cancel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transactions",
+                ":id",
+                "cancel"
+              ],
+              "query": [
+                {
+                  "key": null,
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Store (Discount + QRIS Pending)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"shift_id\": 2,\r\n  \"items\": [\r\n    { \"product_id\": 2, \"quantity\": 500 }\r\n  ],\r\n  \"discount_codes\": [\"HEMAT10\", \"FLAT20K\"],\r\n  \"payment_method\": \"qris\",\r\n  \"notes\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Store (QRIS Pending) Cancel",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"shift_id\": 2,\r\n    \"items\": [{\"product_id\": 1, \"quantity\": 2}],\r\n    \"payment_method\": \"qris\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confrim",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"shift_id\": 2,\r\n    \"items\": [{\"product_id\": 1, \"quantity\": 2}],\r\n    \"payment_method\": \"qris\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions/:id/confirm-payment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transactions",
+                ":id",
+                "confirm-payment"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "4"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refund",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"items\": [\r\n        {\r\n            \"transaction_item_id\": 1,\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"reason\": \"Barang rusak\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions/:id/refund",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transactions",
+                ":id",
+                "refund"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
